@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-require('dotenv').config({ path: '.env.local' })
+require('dotenv').config({ path: '.env' })
 
 const BannerSchema = new mongoose.Schema({
   title: {
@@ -32,25 +32,32 @@ const Banner = mongoose.models.Banner || mongoose.model('Banner', BannerSchema)
 
 const defaultBanners = [
   {
-    title: 'Natural Skincare',
-    subtitle: 'Discover Pure, Organic Beauty Solutions',
-    image: '/natural-skincare-botanical-ingredients.jpg',
+    title: 'Latest Electronics & Appliances',
+    subtitle: 'Discover Premium Quality at Unbeatable Prices',
+    image: 'https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=1200&h=600&fit=crop',
     isActive: true,
     order: 1
   },
   {
-    title: 'Essential Oils Collection',
-    subtitle: 'Therapeutic Aromatherapy for Your Wellness',
-    image: '/essential-oils-bottles-herbs.jpg',
+    title: 'Smart Home Revolution',
+    subtitle: 'Transform Your Home with Cutting-Edge Technology',
+    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&h=600&fit=crop',
     isActive: true,
     order: 2
   },
   {
-    title: 'Herbal Remedies',
-    subtitle: 'Ancient Wisdom Meets Modern Wellness',
-    image: '/herbal-remedies-natural-medicine.jpg',
+    title: 'Kitchen Appliances Sale',
+    subtitle: 'Up to 30% Off on Microwaves, Fridges & More',
+    image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1200&h=600&fit=crop',
     isActive: true,
     order: 3
+  },
+  {
+    title: 'Entertainment Systems',
+    subtitle: 'Premium TVs, Sound Systems & Gaming Consoles',
+    image: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=1200&h=600&fit=crop',
+    isActive: true,
+    order: 4
   }
 ]
 

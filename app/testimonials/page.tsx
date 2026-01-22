@@ -59,7 +59,7 @@ export default function TestimonialsPage() {
               Customer Testimonials
             </h1>
             <p className="text-lg text-muted-foreground text-balance">
-              See what our happy customers have to say about Serenleaf Natural products.
+              See what our happy customers have to say about Electromatt products and service.
             </p>
           </div>
         </section>
@@ -163,7 +163,7 @@ export default function TestimonialsPage() {
               Share Your Experience
             </h2>
             <p className="text-lg text-muted-foreground mb-8 text-balance">
-              Have you tried Serenleaf Natural products? We would love to hear your story!
+              Have you purchased from Electromatt? We would love to hear about your experience!
             </p>
             <button className="text-primary hover:text-accent font-semibold flex items-center justify-center gap-2 mx-auto">
               <MessageCircle className="w-5 h-5" />

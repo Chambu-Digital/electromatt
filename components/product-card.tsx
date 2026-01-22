@@ -1,8 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { Star, ShoppingCart, Heart, Eye } from 'lucide-react'
+import { Star, ShoppingCart, Heart, Eye, Plus, Minus, Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { useCartStore } from '@/lib/cart-store'
+import { toast } from 'sonner'
 import Link from 'next/link'
 
 interface Product {
@@ -16,6 +18,7 @@ interface Product {
   inStock: boolean
   isNew?: boolean
   isBestseller?: boolean
+  stockQuantity?: number
 }
 
 interface ProductCardProps {
@@ -26,10 +29,58 @@ interface ProductCardProps {
 export default function ProductCard({ product, viewMode = 'grid' }: ProductCardProps) {
   const [isFavorite, setIsFavorite] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
+  const [quantity, setQuantity] = useState(1)
+  const [isAddingToCart, setIsAddingToCart] = useState(false)
+  const [justAdded, setJustAdded] = useState(false)
+  
+  const { addItem } = useCartStore()
 
   const discountPercentage = product.oldPrice 
     ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
     : 0
+
+  const handleAddToCart = async () => {
+    if (!product.inStock) return
+    
+    setIsAddingToCart(true)
+    
+    try {
+      // Simulate API call delay for better UX
+      await new Promise(resolve => setTimeout(resolve, 500))
+      
+      addItem({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        quantity: quantity
+      })
+      
+      setJustAdded(true)
+      toast.success(`${product.name} added to cart!`, {
+        description: `Quantity: ${quantity}`,
+        action: {
+          label: 'View Cart',
+          onClick: () => window.location.href = '/cart'
+        }
+      })
+      
+      // Reset the "just added" state after 2 seconds
+      setTimeout(() => setJustAdded(false), 2000)
+      
+    } catch (error) {
+      toast.error('Failed to add item to cart')
+    } finally {
+      setIsAddingToCart(false)
+    }
+  }
+
+  const handleQuantityChange = (change: number) => {
+    const newQuantity = quantity + change
+    if (newQuantity >= 1 && newQuantity <= (product.stockQuantity || 99)) {
+      setQuantity(newQuantity)
+    }
+  }
 
   if (viewMode === 'list') {
     return (
@@ -127,13 +178,50 @@ export default function ProductCard({ product, viewMode = 'grid' }: ProductCardP
                     <Eye className="w-4 h-4" />
                   </Button>
                 </Link>
+                
+                {/* Quantity Controls */}
+                <div className="flex items-center gap-1 border rounded-lg">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8"
+                    onClick={() => handleQuantityChange(-1)}
+                    disabled={quantity <= 1}
+                  >
+                    <Minus className="w-3 h-3" />
+                  </Button>
+                  <span className="px-2 text-sm font-medium min-w-[2rem] text-center">
+                    {quantity}
+                  </span>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8"
+                    onClick={() => handleQuantityChange(1)}
+                    disabled={quantity >= (product.stockQuantity || 99)}
+                  >
+                    <Plus className="w-3 h-3" />
+                  </Button>
+                </div>
+                
                 <Button 
                   size="sm"
-                  disabled={!product.inStock}
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                  disabled={!product.inStock || isAddingToCart}
+                  onClick={handleAddToCart}
+                  className={`transition-all duration-300 ${
+                    justAdded 
+                      ? 'bg-green-600 hover:bg-green-700' 
+                      : 'bg-primary hover:bg-primary/90'
+                  } text-white`}
                 >
-                  <ShoppingCart className="w-4 h-4 mr-1" />
-                  Add to Cart
+                  {isAddingToCart ? (
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-1" />
+                  ) : justAdded ? (
+                    <Check className="w-4 h-4 mr-1" />
+                  ) : (
+                    <ShoppingCart className="w-4 h-4 mr-1" />
+                  )}
+                  {justAdded ? 'Added!' : isAddingToCart ? 'Adding...' : 'Add to Cart'}
                 </Button>
               </div>
             </div>
@@ -196,11 +284,22 @@ export default function ProductCard({ product, viewMode = 'grid' }: ProductCardP
           </Link>
           <Button 
             size="sm"
-            disabled={!product.inStock}
-            className="bg-primary hover:bg-primary/90 text-primary-foreground"
+            disabled={!product.inStock || isAddingToCart}
+            onClick={handleAddToCart}
+            className={`transition-all duration-300 ${
+              justAdded 
+                ? 'bg-green-600 hover:bg-green-700' 
+                : 'bg-primary hover:bg-primary/90'
+            } text-white`}
           >
-            <ShoppingCart className="w-4 h-4 mr-1" />
-            Add to Cart
+            {isAddingToCart ? (
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-1" />
+            ) : justAdded ? (
+              <Check className="w-4 h-4 mr-1" />
+            ) : (
+              <ShoppingCart className="w-4 h-4 mr-1" />
+            )}
+            {justAdded ? 'Added!' : isAddingToCart ? 'Adding...' : 'Add to Cart'}
           </Button>
         </div>
       </div>
@@ -247,19 +346,79 @@ export default function ProductCard({ product, viewMode = 'grid' }: ProductCardP
         </div>
 
         {/* Stock Status */}
-        <p className={`text-sm font-medium mb-4 ${
-          product.inStock ? 'text-green-600' : 'text-destructive'
-        }`}>
-          {product.inStock ? 'In Stock' : 'Out of Stock'}
-        </p>
+        <div className="flex items-center justify-between mb-4">
+          <p className={`text-sm font-medium ${
+            product.inStock ? 'text-green-600' : 'text-destructive'
+          }`}>
+            {product.inStock ? (
+              product.stockQuantity && product.stockQuantity <= 5 ? 
+                `Only ${product.stockQuantity} left!` : 
+                'In Stock'
+            ) : 'Out of Stock'}
+          </p>
+          {product.stockQuantity && product.stockQuantity <= 5 && product.inStock && (
+            <span className="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded-full">
+              Low Stock
+            </span>
+          )}
+        </div>
+
+        {/* Quantity Controls for Grid View */}
+        {product.inStock && (
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-sm font-medium">Quantity:</span>
+            <div className="flex items-center gap-1 border rounded-lg">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                onClick={() => handleQuantityChange(-1)}
+                disabled={quantity <= 1}
+              >
+                <Minus className="w-3 h-3" />
+              </Button>
+              <span className="px-3 text-sm font-medium min-w-[2.5rem] text-center">
+                {quantity}
+              </span>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                onClick={() => handleQuantityChange(1)}
+                disabled={quantity >= (product.stockQuantity || 99)}
+              >
+                <Plus className="w-3 h-3" />
+              </Button>
+            </div>
+          </div>
+        )}
 
         {/* Add to Cart Button */}
         <Button 
-          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
-          disabled={!product.inStock}
+          className={`w-full transition-all duration-300 ${
+            justAdded 
+              ? 'bg-green-600 hover:bg-green-700' 
+              : 'bg-primary hover:bg-primary/90'
+          } text-white`}
+          disabled={!product.inStock || isAddingToCart}
+          onClick={handleAddToCart}
         >
-          <ShoppingCart className="w-4 h-4 mr-2" />
-          {product.inStock ? 'Add to Cart' : 'Out of Stock'}
+          {isAddingToCart ? (
+            <>
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+              Adding...
+            </>
+          ) : justAdded ? (
+            <>
+              <Check className="w-4 h-4 mr-2" />
+              Added to Cart!
+            </>
+          ) : (
+            <>
+              <ShoppingCart className="w-4 h-4 mr-2" />
+              {product.inStock ? 'Add to Cart' : 'Out of Stock'}
+            </>
+          )}
         </Button>
       </div>
     </div>

@@ -9,8 +9,8 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Serenleaf Natural - Organic Skincare & Wellness',
-  description: 'Natural, organic herbal products for skincare, beauty, and wellness. Discover our collection of essential oils, remedies, and natural treatments.',
+  title: 'Electromatt - Premium Electronics & Appliances',
+  description: 'Your trusted electronics store for fridges, microwaves, TVs, smartphones, and all electronic appliances. Quality products with excellent service.',
   generator: 'v0.app',
   icons: {
     icon: [

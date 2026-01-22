@@ -33,7 +33,7 @@ export default function BlogSection() {
       <section className="py-8 md:py-12 px-4 md:px-8 bg-muted/30">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-bold mb-8 text-foreground text-balance">
-            Wellness Tips & Natural Remedies
+            Tech News & Electronics Guide
           </h2>
           <div className="grid md:grid-cols-3 gap-6">
             {Array(3).fill(0).map((_, i) => (
@@ -58,11 +58,11 @@ export default function BlogSection() {
       <section className="py-8 md:py-12 px-4 md:px-8 bg-muted/30">
         <div className="max-w-6xl mx-auto text-center">
           <h2 className="text-2xl md:text-3xl font-bold mb-4 text-foreground text-balance">
-            Wellness Tips & Natural Remedies
+            Tech News & Electronics Guide
           </h2>
           <p className="text-muted-foreground mb-6">
-            We're working on creating valuable content about natural remedies and wellness. 
-            Check back soon for educational articles and health tips!
+            We're working on creating valuable content about electronics, tech reviews, and buying guides. 
+            Check back soon for product reviews and technology insights!
           </p>
           <Link href="/blog">
             <Button>Explore Our Blog</Button>
@@ -77,7 +77,7 @@ export default function BlogSection() {
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl md:text-3xl font-bold text-foreground text-balance">
-            Wellness Tips & Natural Remedies
+            Tech News & Electronics Guide
           </h2>
           <Link href="/blog">
             <Button variant="outline">

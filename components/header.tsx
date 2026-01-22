@@ -1,13 +1,14 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { ShoppingCart, User, Search, Menu, Leaf, X, ChevronDown, Phone, MapPin } from 'lucide-react'
+import { ShoppingCart, User, Search, Menu, Zap, X, ChevronDown, Phone, MapPin } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { ICategory } from '@/models/Category'
 import { getProductDisplayImage, getProductDisplayPrice } from '@/lib/product-utils'
 import { useCartStore } from '@/lib/cart-store'
 import { useUserStore } from '@/lib/user-store'
+import CartSidebar from '@/components/cart-sidebar'
 
 export default function Header() {
   const { getTotalItems, isLoaded } = useCartStore()
@@ -110,8 +111,8 @@ export default function Header() {
         <div className="hidden md:flex items-center justify-between h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-            <Leaf className="w-8 h-8 text-primary" />
-            <h1 className="text-2xl font-bold text-primary">Serenleaf Naturals</h1>
+            <Zap className="w-8 h-8 text-primary" />
+            <h1 className="text-2xl font-bold text-primary">Electromatt</h1>
           </Link>
 
           {/* Navigation Links */}
@@ -159,7 +160,7 @@ export default function Header() {
               <Search className="w-5 h-5 text-muted-foreground" />
               <input
                 type="text"
-                placeholder="Search products..."
+                placeholder="Search electronics..."
                 value={searchQuery}
                 onChange={(e) => handleSearchChange(e.target.value)}
                 onFocus={() => searchResults.length > 0 && setShowSearchResults(true)}
@@ -228,7 +229,7 @@ export default function Header() {
                 </Button>
               </Link>
             )}
-            <Link href="/cart">
+            <CartSidebar>
               <Button variant="ghost" size="icon" className="relative">
                 <ShoppingCart className="w-6 h-6" />
                 {isLoaded && getTotalItems() > 0 && (
@@ -237,15 +238,15 @@ export default function Header() {
                   </span>
                 )}
               </Button>
-            </Link>
+            </CartSidebar>
           </div>
         </div>
 
         {/* Mobile Header */}
         <div className="md:hidden flex items-center justify-between h-16">
           <Link href="/" className="flex items-center gap-2">
-            <Leaf className="w-6 h-6 text-primary" />
-            <h1 className="text-lg font-bold text-primary">Serenleaf Naturals</h1>
+            <Zap className="w-6 h-6 text-primary" />
+            <h1 className="text-lg font-bold text-primary">Electromatt</h1>
           </Link>
 
           <div className="flex items-center gap-2">
@@ -256,7 +257,7 @@ export default function Header() {
             >
               <Search className="w-5 h-5" />
             </Button>
-            <Link href="/cart">
+            <CartSidebar>
               <Button variant="ghost" size="icon" className="relative">
                 <ShoppingCart className="w-5 h-5" />
                 {isLoaded && getTotalItems() > 0 && (
@@ -265,7 +266,7 @@ export default function Header() {
                   </span>
                 )}
               </Button>
-            </Link>
+            </CartSidebar>
             <Button
               variant="ghost"
               size="icon"
@@ -284,7 +285,7 @@ export default function Header() {
                 <Search className="w-4 h-4 text-muted-foreground" />
                 <input
                   type="text"
-                  placeholder="Search products..."
+                  placeholder="Search electronics..."
                   value={searchQuery}
                   onChange={(e) => handleSearchChange(e.target.value)}
                   className="flex-1 bg-transparent ml-3 outline-none text-foreground placeholder:text-muted-foreground text-sm"

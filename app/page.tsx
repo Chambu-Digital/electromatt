@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { ShoppingCart, User, Search, Leaf, ChevronLeft, ChevronRight, Star } from 'lucide-react'
+import { ShoppingCart, User, Search, Zap, ChevronLeft, ChevronRight, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import HeroSlider from '@/components/hero-slider'
 import CategoryGrid from '@/components/category-grid'

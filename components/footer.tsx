@@ -1,6 +1,6 @@
 'use client'
 
-import { Leaf, Instagram, Facebook, Mail, Phone, MapPin } from 'lucide-react'
+import { Zap, Instagram, Facebook, Mail, Phone, MapPin } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 export default function Footer() {
@@ -11,11 +11,11 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <Leaf className="w-6 h-6" />
-              <h2 className="text-xl font-bold">Serenleaf Naturals</h2>
+              <Zap className="w-6 h-6" />
+              <h2 className="text-xl font-bold">Electromatt</h2>
             </div>
             <p className="text-sm opacity-90">
-              Natural, organic wellness products for a healthier, more beautiful you.
+              Your trusted electronics store for quality appliances and gadgets.
             </p>
           </div>
 
@@ -23,10 +23,10 @@ export default function Footer() {
           <div>
             <h3 className="font-semibold mb-4">Shop</h3>
             <ul className="space-y-2 text-sm">
-              <li><a href="#" className="opacity-75 hover:opacity-100">Skincare & Beauty</a></li>
-              <li><a href="#" className="opacity-75 hover:opacity-100">Essential Oils</a></li>
-              <li><a href="#" className="opacity-75 hover:opacity-100">Herbal Remedies</a></li>
-              <li><a href="#" className="opacity-75 hover:opacity-100">Gift Sets</a></li>
+              <li><a href="#" className="opacity-75 hover:opacity-100">Home Appliances</a></li>
+              <li><a href="#" className="opacity-75 hover:opacity-100">Kitchen Electronics</a></li>
+              <li><a href="#" className="opacity-75 hover:opacity-100">Entertainment</a></li>
+              <li><a href="#" className="opacity-75 hover:opacity-100">Mobile & Tablets</a></li>
             </ul>
           </div>
 
@@ -65,7 +65,7 @@ export default function Footer() {
             </div>
             <div className="flex items-center gap-2">
               <Mail className="w-4 h-4" />
-              <span>hello@serenleaf.com</span>
+              <span>info@electromatt.co.ke</span>
             </div>
           </div>
 
@@ -90,7 +90,7 @@ export default function Footer() {
 
         {/* Copyright */}
         <div className="border-t border-primary-foreground/20 mt-8 pt-8 text-center text-sm opacity-75">
-          <p>&copy; 2025 Serenleaf Naturals. All rights reserved.</p>
+          <p>&copy; 2025 Electromatt. All rights reserved.</p>
         </div>
       </div>
     </footer>
