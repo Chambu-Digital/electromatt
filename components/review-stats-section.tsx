@@ -105,7 +105,7 @@ export default function ReviewStatsSection() {
             What Our Customers Say
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Join thousands of satisfied customers who trust Serenleaf Natural for their wellness journey
+            Join thousands of satisfied customers who trust Electromatt for their electronics needs
           </p>
         </div>
 

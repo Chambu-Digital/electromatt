@@ -1,6 +1,6 @@
 'use client'
 
-import { Leaf, Award, Heart, Globe } from 'lucide-react'
+import { Zap, Award, Shield, Truck } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Header from '@/components/header'
 import Footer from '@/components/footer'
@@ -8,24 +8,24 @@ import Footer from '@/components/footer'
 export default function AboutPage() {
   const values = [
     {
-      icon: Leaf,
-      title: 'Natural & Organic',
-      description: 'We source only the finest natural ingredients, free from harmful chemicals and synthetic additives.',
+      icon: Zap,
+      title: 'Latest Technology',
+      description: 'We offer cutting-edge electronics and appliances with the latest features and innovations.',
     },
     {
-      icon: Heart,
-      title: 'Wellness Focused',
-      description: 'Our mission is to promote holistic health and well-being through nature-inspired products.',
+      icon: Shield,
+      title: 'Quality Guaranteed',
+      description: 'All our products come with manufacturer warranties and our commitment to quality service.',
     },
     {
-      icon: Globe,
-      title: 'Sustainable',
-      description: 'We are committed to eco-friendly practices and sustainable sourcing of all our ingredients.',
+      icon: Truck,
+      title: 'Fast Delivery',
+      description: 'Quick and reliable delivery across Kenya with professional installation services available.',
     },
     {
       icon: Award,
-      title: 'Quality Assured',
-      description: 'Every product undergoes rigorous testing to ensure purity, potency, and safety.',
+      title: 'Expert Support',
+      description: 'Our knowledgeable team provides expert advice and after-sales support for all products.',
     },
   ]
 
@@ -38,10 +38,10 @@ export default function AboutPage() {
         <section className="py-12 md:py-20 px-4 md:px-8 bg-primary/10">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 text-balance">
-              About Serenleaf Natural
+              About Electromatt
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-8 text-balance">
-              Discover the story behind our natural wellness journey and our commitment to bringing you the purest organic products.
+              Your trusted electronics partner in Kenya, providing quality appliances and exceptional service since 2018.
             </p>
           </div>
         </section>
@@ -52,13 +52,13 @@ export default function AboutPage() {
             <h2 className="text-3xl font-bold text-foreground mb-8 text-balance">Our Story</h2>
             <div className="space-y-6 text-card-foreground leading-relaxed">
               <p>
-                Serenleaf Natural was born from a simple belief: that nature holds the key to true wellness. Founded in 2018, our journey began when our founder discovered the transformative power of natural, organic ingredients while searching for solutions to personal health challenges.
+                Electromatt was founded in 2018 with a vision to make quality electronics accessible to every Kenyan household. What started as a small electronics shop has grown into one of Kenya's most trusted electronics retailers, serving thousands of satisfied customers across the country.
               </p>
               <p>
-                What started as a personal passion quickly evolved into a mission to share these discoveries with others. We began researching ancient herbal traditions, studying botanical remedies, and connecting with organic farmers who shared our vision for sustainable, chemical-free products.
+                Our journey began when our founder recognized the need for reliable, affordable electronics with excellent customer service. We partnered with leading global brands like Samsung, LG, Sony, and others to bring you the latest technology at competitive prices.
               </p>
               <p>
-                Today, Serenleaf Natural is trusted by thousands of customers across East Africa who have made us part of their daily wellness routine. We remain committed to our core values: authenticity, quality, sustainability, and a genuine care for our customers' well-being.
+                Today, Electromatt is your one-stop destination for home appliances, kitchen electronics, entertainment systems, and mobile devices. We pride ourselves on our expert advice, professional installation services, and comprehensive after-sales support.
               </p>
             </div>
           </div>
@@ -68,7 +68,7 @@ export default function AboutPage() {
         <section className="py-12 md:py-16 px-4 md:px-8 bg-muted/30">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-3xl font-bold text-foreground mb-12 text-center text-balance">
-              Our Core Values
+              Why Choose Electromatt
             </h2>
 
             <div className="grid md:grid-cols-2 gap-8">
@@ -94,10 +94,10 @@ export default function AboutPage() {
         <section className="py-12 md:py-16 px-4 md:px-8">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl font-bold text-foreground mb-6 text-balance">
-              Join Our Wellness Community
+              Why Choose Electromatt?
             </h2>
             <p className="text-lg text-muted-foreground mb-8 text-balance">
-              Be part of a movement toward natural, sustainable wellness. Discover products that care for you and the planet.
+              Experience the difference with Kenya's most trusted electronics retailer. Quality products, expert service, and unbeatable value.
             </p>
             <Button className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg">
               Shop Now

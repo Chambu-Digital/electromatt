@@ -17,7 +17,7 @@ export const generateOrderMessage = (
     .map((item) => `• ${item.name} (Qty: ${item.quantity}) - KSH ${item.price.toFixed(2)}`)
     .join('\n')
 
-  return `Hi Serenleaf Natural,
+  return `Hi Electromatt,
 
 I would like to place an order:
 
@@ -39,7 +39,7 @@ export const generateInquiryMessage = (
   name: string,
   inquiry: string
 ): string => {
-  return `Hi Serenleaf Natural,
+  return `Hi Electromatt,
 
 I have an inquiry:
 
@@ -55,7 +55,7 @@ export const generateSupportMessage = (
   orderNumber: string,
   issue: string
 ): string => {
-  return `Hi Serenleaf Natural Support,
+  return `Hi Electromatt Support,
 
 I need help with my order:
 

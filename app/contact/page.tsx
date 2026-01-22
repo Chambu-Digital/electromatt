@@ -30,26 +30,26 @@ export default function ContactPage() {
     {
       icon: Phone,
       title: 'Call Us',
-      details: '+254 712 345 678',
-      link: 'tel:+254712345678',
+      details: '+254 702 113 628',
+      link: 'tel:+254702113628',
     },
     {
       icon: Mail,
       title: 'Email Us',
-      details: 'hello@serenleaf.com',
-      link: 'mailto:hello@serenleaf.com',
+      details: 'info@electromatt.co.ke',
+      link: 'mailto:info@electromatt.co.ke',
     },
     {
       icon: MapPin,
       title: 'Visit Us',
-      details: 'Nairobi, Kenya',
+      details: 'Agro House, Moi Avenue, 1st Floor Rm 35',
       link: '#',
     },
     {
       icon: MessageCircle,
       title: 'WhatsApp',
-      details: '+254 712 345 678',
-      link: 'https://wa.me/254712345678',
+      details: '+254 702 113 628',
+      link: 'https://wa.me/254702113628',
     },
   ]
 
@@ -179,26 +179,26 @@ export default function ContactPage() {
                   <div className="space-y-6">
                     <div>
                       <h3 className="font-semibold text-card-foreground mb-2">
-                        What are your shipping times?
+                        What are your delivery options?
                       </h3>
                       <p className="text-sm text-muted-foreground">
-                        We typically ship within 1-2 business days. Delivery takes 2-5 business days depending on your location.
+                        We offer free delivery within Nairobi and installation services for major appliances. Countrywide delivery available.
                       </p>
                     </div>
                     <div>
                       <h3 className="font-semibold text-card-foreground mb-2">
-                        Do you offer returns?
+                        Do you provide warranties?
                       </h3>
                       <p className="text-sm text-muted-foreground">
-                        Yes, we offer 30-day returns on all products. If you are not satisfied, we will issue a full refund.
+                        Yes, all our products come with manufacturer warranties. We also provide extended warranty options.
                       </p>
                     </div>
                     <div>
                       <h3 className="font-semibold text-card-foreground mb-2">
-                        Are all products organic?
+                        Do you offer installation services?
                       </h3>
                       <p className="text-sm text-muted-foreground">
-                        All our products are made from natural, organic ingredients. We do not use any harmful chemicals or synthetic additives.
+                        Yes, we provide professional installation services for appliances like fridges, washing machines, and TVs.
                       </p>
                     </div>
                   </div>

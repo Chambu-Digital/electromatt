@@ -27,3 +27,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to create banner' }, { status: 500 })
   }
 }
+
+export async function DELETE() {
+  try {
+    await connectDB()
+    await Banner.deleteMany({})
+    return NextResponse.json({ message: 'All banners deleted successfully' })
+  } catch (error) {
+    console.error('Error deleting banners:', error)
+    return NextResponse.json({ error: 'Failed to delete banners' }, { status: 500 })
+  }
+}
