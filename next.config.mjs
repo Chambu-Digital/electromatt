@@ -6,10 +6,8 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  experimental: {
-    // Enable React 19 features
-    reactCompiler: false,
-  },
+  // React compiler is now a top-level option in Next.js 16
+  reactCompiler: false,
 }
 
 export default nextConfig
