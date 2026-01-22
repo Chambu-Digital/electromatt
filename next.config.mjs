@@ -6,6 +6,10 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  experimental: {
+    // Enable React 19 features
+    reactCompiler: false,
+  },
 }
 
 export default nextConfig

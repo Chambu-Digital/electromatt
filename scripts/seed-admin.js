@@ -86,7 +86,7 @@ async function seedAdmin() {
     console.log('Connected to MongoDB')
 
     // Check if admin already exists
-    const existingAdmin = await User.findOne({ email: 'serenleaf@gmail.com' })
+    const existingAdmin = await User.findOne({ email: 'electromatt@gmail.com' })
     
     if (existingAdmin) {
       console.log('Admin user already exists!')
@@ -107,9 +107,9 @@ async function seedAdmin() {
       console.log('Creating admin user...')
       
       const adminUser = new User({
-        firstName: 'Serenleaf',
+        firstName: 'Electromatt',
         lastName: 'Super Admin',
-        email: 'serenleaf@gmail.com',
+        email: 'electromatt@gmail.com',
         password: 'admin123', // Will be hashed by the pre-save hook
         phone: '+254702113628',
         role: 'super_admin',
@@ -124,7 +124,7 @@ async function seedAdmin() {
     }
 
     console.log('\n=== ADMIN USER DETAILS ===')
-    const admin = await User.findOne({ email: 'serenleaf@gmail.com' }).select('-password')
+    const admin = await User.findOne({ email: 'electromatt@gmail.com' }).select('-password')
     console.log('ID:', admin._id)
     console.log('Name:', admin.firstName, admin.lastName)
     console.log('Email:', admin.email)
@@ -137,7 +137,7 @@ async function seedAdmin() {
 
     console.log('\n✅ Admin seeding completed successfully!')
     console.log('You can now login with:')
-    console.log('Email: serenleaf@gmail.com')
+    console.log('Email: electromatt@gmail.com')
     console.log('Password: admin123')
 
   } catch (error) {
