@@ -6,7 +6,6 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  // React compiler is now a top-level option in Next.js 16
   reactCompiler: false,
 }
 
