@@ -2,8 +2,10 @@
 
 import { Zap, Award, Shield, Truck } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import Breadcrumb from '@/components/breadcrumb'
 import Header from '@/components/header'
 import Footer from '@/components/footer'
+import Link from 'next/link'
 
 export default function AboutPage() {
   const values = [
@@ -29,60 +31,101 @@ export default function AboutPage() {
     },
   ]
 
-  return (
-    <div className="min-h-screen bg-background">
-      <Header cartCount={0} />
+  const breadcrumbItems = [
+    { label: 'Home', href: '/' },
+    { label: 'About', href: '/about' }
+  ]
 
-      <main>
+  return (
+    <div className="flex flex-col min-h-screen bg-background">
+      <Header />
+
+      <main className="flex-1">
+        {/* Breadcrumb */}
+        <div className="py-4 px-4 md:px-8 bg-muted/30">
+          <div className="max-w-6xl mx-auto">
+            <Breadcrumb items={breadcrumbItems} />
+          </div>
+        </div>
+
         {/* Hero Section */}
-        <section className="py-12 md:py-20 px-4 md:px-8 bg-primary/10">
+        <section className="py-8 md:py-12 px-4 md:px-8 bg-primary/10">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 text-balance">
-              About Electromatt
+            <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              About <span className="font-black uppercase tracking-wide">ELECTROMATT</span>
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground mb-8 text-balance">
-              Your trusted electronics partner in Kenya, providing quality appliances and exceptional service since 2018.
+            <p className="text-lg text-muted-foreground mb-6 max-w-3xl mx-auto">
+              Kenya's premier electronics retailer since 2018. From home appliances to smart devices, we bring you the latest technology with exceptional service and unbeatable prices.
             </p>
           </div>
         </section>
 
         {/* Brand Story */}
-        <section className="py-12 md:py-16 px-4 md:px-8">
+        <section className="py-8 md:py-12 px-4 md:px-8">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6">Our Story</h2>
+            <p className="text-muted-foreground leading-relaxed mb-4">
+              Founded in 2018, Electromatt has grown from a small Nairobi shop to Kenya's trusted electronics retailer. We partner with leading brands like Samsung, LG, Sony, and Apple to bring you quality technology at competitive prices.
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Located at Agro House, Moi Avenue - Your one-stop destination for electronics and appliances.
+            </p>
+          </div>
+        </section>
+
+        {/* Store Information & Contact */}
+        <section className="py-8 md:py-12 px-4 md:px-8">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold text-foreground mb-8 text-balance">Our Story</h2>
-            <div className="space-y-6 text-card-foreground leading-relaxed">
-              <p>
-                Electromatt was founded in 2018 with a vision to make quality electronics accessible to every Kenyan household. What started as a small electronics shop has grown into one of Kenya's most trusted electronics retailers, serving thousands of satisfied customers across the country.
-              </p>
-              <p>
-                Our journey began when our founder recognized the need for reliable, affordable electronics with excellent customer service. We partnered with leading global brands like Samsung, LG, Sony, and others to bring you the latest technology at competitive prices.
-              </p>
-              <p>
-                Today, Electromatt is your one-stop destination for home appliances, kitchen electronics, entertainment systems, and mobile devices. We pride ourselves on our expert advice, professional installation services, and comprehensive after-sales support.
-              </p>
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6 text-center">
+              Visit Our Store
+            </h2>
+            <div className="bg-card rounded-lg p-6 border border-border">
+              <div className="grid md:grid-cols-2 gap-6 text-center md:text-left">
+                <div>
+                  <h3 className="text-lg font-semibold text-card-foreground mb-3">Location & Contact</h3>
+                  <div className="space-y-1 text-sm text-muted-foreground">
+                    <p>Agro House, Moi Avenue, 1st Floor Rm 35</p>
+                    <p>Phone: +254 702 113 628</p>
+                    <p>Email: info@electromatt.co.ke</p>
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-card-foreground mb-3">Business Hours</h3>
+                  <div className="space-y-1 text-sm text-muted-foreground">
+                    <p>Mon-Fri: 8:00 AM - 6:00 PM</p>
+                    <p>Saturday: 9:00 AM - 5:00 PM</p>
+                    <p>Sunday: 10:00 AM - 4:00 PM</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
         {/* Our Values */}
-        <section className="py-12 md:py-16 px-4 md:px-8 bg-muted/30">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-3xl font-bold text-foreground mb-12 text-center text-balance">
-              Why Choose Electromatt
+        <section className="py-8 md:py-12 px-4 md:px-8 bg-muted/30">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-8 text-center">
+              Why Choose Us
             </h2>
 
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid md:grid-cols-2 gap-6">
               {values.map((value, index) => {
-                const Icon = value.icon
                 return (
                   <div key={index} className="bg-card rounded-lg p-6 border border-border">
-                    <Icon className="w-10 h-10 text-primary mb-4" />
-                    <h3 className="text-xl font-semibold text-card-foreground mb-3">
-                      {value.title}
-                    </h3>
-                    <p className="text-muted-foreground leading-relaxed">
-                      {value.description}
-                    </p>
+                    <div className="flex items-start gap-4">
+                      <div className="flex-shrink-0 w-10 h-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-lg">
+                        {index + 1}
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-lg font-semibold text-card-foreground mb-2">
+                          {value.title}
+                        </h3>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          {value.description}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 )
               })}
@@ -90,18 +133,27 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* Team & CTA */}
-        <section className="py-12 md:py-16 px-4 md:px-8">
+        {/* CTA */}
+        <section className="py-8 md:py-12 px-4 md:px-8 bg-gradient-to-r from-primary/10 to-secondary/10">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl font-bold text-foreground mb-6 text-balance">
-              Why Choose Electromatt?
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+              Ready to Shop?
             </h2>
-            <p className="text-lg text-muted-foreground mb-8 text-balance">
-              Experience the difference with Kenya's most trusted electronics retailer. Quality products, expert service, and unbeatable value.
+            <p className="text-muted-foreground mb-6">
+              Join thousands of satisfied customers. Quality electronics, expert service, unbeatable prices.
             </p>
-            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg">
-              Shop Now
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/products">
+                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3">
+                  Shop Now
+                </Button>
+              </Link>
+              <Link href="/contact">
+                <Button variant="outline" className="px-6 py-3">
+                  Contact Us
+                </Button>
+              </Link>
+            </div>
           </div>
         </section>
       </main>

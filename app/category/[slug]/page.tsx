@@ -93,9 +93,9 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="flex flex-col min-h-screen bg-background">
         <Header />
-        <main className="max-w-7xl mx-auto px-4 py-8">
+        <main className="flex-1 max-w-7xl mx-auto px-4 py-8">
           <div className="animate-pulse">
             <div className="h-8 bg-muted rounded w-64 mb-8" />
             <div className="h-64 bg-muted rounded mb-8" />
@@ -119,9 +119,9 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
 
   if (error || !category) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="flex flex-col min-h-screen bg-background">
         <Header />
-        <main className="max-w-7xl mx-auto px-4 py-8">
+        <main className="flex-1 max-w-7xl mx-auto px-4 py-8">
           <div className="text-center py-16">
             <h1 className="text-2xl font-bold mb-4">Category Not Found</h1>
             <p className="text-muted-foreground mb-8">The category you're looking for doesn't exist.</p>
@@ -136,10 +136,10 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="flex flex-col min-h-screen bg-background">
       <Header />
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      <main className="flex-1 max-w-7xl mx-auto px-4 py-8">
         {/* Breadcrumb */}
         <div className="mb-8 text-sm text-muted-foreground">
           <Link href="/" className="hover:text-foreground">Home</Link>

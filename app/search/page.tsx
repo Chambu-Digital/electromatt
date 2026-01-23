@@ -39,17 +39,18 @@ function SearchResults() {
 
   return (
     <>
-      <h1 className="text-2xl md:text-3xl font-bold mb-2">Search Results</h1>
-      <p className="text-muted-foreground mb-8">
-        {query ? `Results for "${query}"` : 'Enter a search term'}
-      </p>
+      <div className="mb-6">
+        <p className="text-muted-foreground">
+          {query ? `Results for "${query}"` : 'Enter a search term'}
+        </p>
+      </div>
         
         {loading ? (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {Array(8).fill(0).map((_, index) => (
               <div key={index} className="bg-card rounded-lg overflow-hidden animate-pulse">
-                <div className="bg-muted h-48" />
-                <div className="p-4 space-y-2">
+                <div className="bg-muted h-40" />
+                <div className="p-3 space-y-2">
                   <div className="h-4 bg-muted rounded w-full" />
                   <div className="h-4 bg-muted rounded w-24" />
                 </div>
@@ -63,9 +64,9 @@ function SearchResults() {
               const { price, oldPrice } = getProductDisplayPrice(product)
               
               return (
-                <div key={product._id} className="bg-card rounded-lg overflow-hidden hover:shadow-lg transition">
+                <div key={product._id} className="bg-card rounded-lg overflow-hidden hover:shadow-md transition border">
                   <Link href={`/product/${product._id}`}>
-                    <div className="relative bg-muted overflow-hidden h-48 cursor-pointer">
+                    <div className="relative bg-muted overflow-hidden h-40 cursor-pointer">
                       <img
                         src={displayImage}
                         alt={product.name}
@@ -73,33 +74,30 @@ function SearchResults() {
                       />
                     </div>
                   </Link>
-                  <div className="p-4">
+                  <div className="p-3">
                     <span className="text-xs text-muted-foreground mb-1 block">{product.category}</span>
                     <Link href={`/product/${product._id}`}>
-                      <h3 className="font-semibold text-sm md:text-base text-card-foreground hover:text-primary transition-colors mb-2 line-clamp-2 cursor-pointer">
+                      <h3 className="font-semibold text-sm text-card-foreground hover:text-primary transition-colors mb-2 line-clamp-2 cursor-pointer">
                         {product.name}
                       </h3>
                     </Link>
-                    <div className="flex items-center gap-2 mb-4">
-                      <span className="text-base font-bold text-primary">KSH {price}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-base font-bold text-primary">KSH {price.toLocaleString()}</span>
                       {oldPrice && (
-                        <span className="text-sm line-through text-muted-foreground">KSH {oldPrice}</span>
+                        <span className="text-sm line-through text-muted-foreground">KSH {oldPrice.toLocaleString()}</span>
                       )}
                     </div>
-                    <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-sm">
-                      Add to Cart
-                    </Button>
                   </div>
                 </div>
               )
             })}
           </div>
         ) : (
-          <div className="text-center py-16">
-            <p className="text-muted-foreground text-lg mb-4">
+          <div className="text-center py-12">
+            <p className="text-muted-foreground mb-4">
               {query ? 'No products found matching your search' : 'Enter a search term to find products'}
             </p>
-            <Link href="/">
+            <Link href="/products">
               <Button variant="outline">Browse All Products</Button>
             </Link>
           </div>
@@ -110,19 +108,29 @@ function SearchResults() {
 
 export default function SearchPage() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="flex flex-col min-h-screen bg-background">
       <Header />
       
-      <main className="max-w-6xl mx-auto px-4 py-8">
+      {/* Hero Section */}
+      <div className="bg-primary text-primary-foreground">
+        <div className="max-w-6xl mx-auto px-4 py-6">
+          <div className="text-center">
+            <h1 className="text-3xl font-bold mb-3">Search Results</h1>
+            <p className="text-primary-foreground/90">
+              Find the perfect electronics for your needs
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      <main className="flex-1 max-w-6xl mx-auto px-4 py-6">
         <Suspense fallback={
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold mb-2">Search Results</h1>
-            <p className="text-muted-foreground mb-8">Loading...</p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {Array(8).fill(0).map((_, index) => (
                 <div key={index} className="bg-card rounded-lg overflow-hidden animate-pulse">
-                  <div className="bg-muted h-48" />
-                  <div className="p-4 space-y-2">
+                  <div className="bg-muted h-40" />
+                  <div className="p-3 space-y-2">
                     <div className="h-4 bg-muted rounded w-full" />
                     <div className="h-4 bg-muted rounded w-24" />
                   </div>

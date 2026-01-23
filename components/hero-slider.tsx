@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import Link from 'next/link'
 
 interface Banner {
   _id: string
@@ -98,9 +99,11 @@ export default function HeroSlider() {
               {slide.title}
             </h2>
             <p className="text-lg md:text-xl mb-6">{slide.subtitle}</p>
-            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
-              Shop Now
-            </Button>
+            <Link href="/products">
+              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 text-lg font-bold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 hover:bg-gradient-to-r hover:from-primary hover:to-primary/80 border-2 border-white/20 hover:border-white/40">
+                 Shop Now
+              </Button>
+            </Link>
           </div>
         </div>
       ))}

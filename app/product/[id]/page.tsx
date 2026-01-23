@@ -174,9 +174,9 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="flex flex-col min-h-screen bg-background">
         <Header />
-        <main className="max-w-6xl mx-auto px-4 py-8">
+        <main className="flex-1 max-w-6xl mx-auto px-4 py-8">
           <div className="animate-pulse">
             <div className="h-6 bg-muted rounded w-64 mb-8" />
             <div className="grid md:grid-cols-2 gap-8">
@@ -197,9 +197,9 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
 
   if (error || !product) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="flex flex-col min-h-screen bg-background">
         <Header />
-        <main className="max-w-6xl mx-auto px-4 py-8">
+        <main className="flex-1 max-w-6xl mx-auto px-4 py-8">
           <div className="text-center py-16">
             <h1 className="text-2xl font-bold mb-4">Product Not Found</h1>
             <p className="text-muted-foreground mb-8">The product you're looking for doesn't exist.</p>
@@ -214,10 +214,10 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="flex flex-col min-h-screen bg-background">
       <Header />
 
-      <main className="max-w-6xl mx-auto px-4 py-8">
+      <main className="flex-1 max-w-6xl mx-auto px-4 py-8">
         {/* Breadcrumb */}
         <div className="mb-8 text-sm text-muted-foreground">
           <Link href="/" className="hover:text-foreground">Home</Link>

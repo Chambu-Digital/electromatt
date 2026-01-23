@@ -1,96 +1,116 @@
 'use client'
 
-import { Zap, Instagram, Facebook, Mail, Phone, MapPin } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Mail, Phone, MapPin, Clock, MessageCircle } from 'lucide-react'
+import Link from 'next/link'
 
 export default function Footer() {
   return (
     <footer className="bg-foreground text-primary-foreground">
-      <div className="max-w-6xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-          {/* Brand */}
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <Zap className="w-6 h-6" />
-              <h2 className="text-xl font-bold">Electromatt</h2>
+      <div className="max-w-6xl mx-auto px-4 py-8 md:py-10">
+        {/* Main Footer Content */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-8 mb-6">
+          {/* Brand & Description */}
+          <div className="md:col-span-1">
+            <div className="flex items-center gap-2 mb-3">
+              <img 
+                src="/electromatt-logo.svg" 
+                alt="Electromatt Logo" 
+                className="w-6 h-6"
+              />
+              <h2 className="text-lg font-black uppercase tracking-wide">ELECTROMATT</h2>
             </div>
-            <p className="text-sm opacity-90">
-              Your trusted electronics store for quality appliances and gadgets.
+            <p className="text-sm opacity-90 mb-4 leading-relaxed">
+              Kenya's trusted electronics retailer since 2018. Quality appliances, competitive prices, exceptional service.
             </p>
-          </div>
-
-          {/* Shop Links */}
-          <div>
-            <h3 className="font-semibold mb-4">Shop</h3>
-            <ul className="space-y-2 text-sm">
-              <li><a href="#" className="opacity-75 hover:opacity-100">Home Appliances</a></li>
-              <li><a href="#" className="opacity-75 hover:opacity-100">Kitchen Electronics</a></li>
-              <li><a href="#" className="opacity-75 hover:opacity-100">Entertainment</a></li>
-              <li><a href="#" className="opacity-75 hover:opacity-100">Mobile & Tablets</a></li>
-            </ul>
-          </div>
-
-          {/* Customer Support */}
-          <div>
-            <h3 className="font-semibold mb-4">Support</h3>
-            <ul className="space-y-2 text-sm">
-              <li><a href="#" className="opacity-75 hover:opacity-100">Contact Us</a></li>
-              <li><a href="#" className="opacity-75 hover:opacity-100">Shipping Info</a></li>
-              <li><a href="#" className="opacity-75 hover:opacity-100">Returns</a></li>
-              <li><a href="#" className="opacity-75 hover:opacity-100">FAQ</a></li>
-            </ul>
-          </div>
-
-          {/* Policies */}
-          <div>
-            <h3 className="font-semibold mb-4">Legal</h3>
-            <ul className="space-y-2 text-sm">
-              <li><a href="#" className="opacity-75 hover:opacity-100">Privacy Policy</a></li>
-              <li><a href="#" className="opacity-75 hover:opacity-100">Terms of Service</a></li>
-              <li><a href="#" className="opacity-75 hover:opacity-100">About Us</a></li>
-            </ul>
-          </div>
-        </div>
-
-        {/* Contact & Social */}
-        <div className="border-t border-primary-foreground/20 pt-8 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-          <div className="flex flex-col gap-3 text-sm">
-            <a href="tel:+254702113628" className="flex items-center gap-2 hover:opacity-75 transition-opacity">
-              <Phone className="w-4 h-4" />
-              <span>+254 702 113 628</span>
-            </a>
-            <div className="flex items-center gap-2">
-              <MapPin className="w-4 h-4" />
-              <span>Agro House, Moi Avenue, 1st Floor Rm 35</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Mail className="w-4 h-4" />
-              <span>info@electromatt.co.ke</span>
+            <div className="flex items-center gap-2 text-sm opacity-75">
+              <Clock className="w-4 h-4" />
+              <span>Mon-Fri: 8AM-6PM</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
-            <span className="text-sm font-semibold">Follow Us</span>
-            <Button
-              size="icon"
-              variant="ghost"
-              className="text-primary-foreground hover:bg-primary-foreground/20"
-            >
-              <Instagram className="w-5 h-5" />
-            </Button>
-            <Button
-              size="icon"
-              variant="ghost"
-              className="text-primary-foreground hover:bg-primary-foreground/20"
-            >
-              <Facebook className="w-5 h-5" />
-            </Button>
+          {/* Contact Information */}
+          <div>
+            <h3 className="font-semibold mb-3 text-base">Contact Us</h3>
+            <div className="space-y-2">
+              <a href="tel:+254702113628" className="flex items-center gap-2 text-sm hover:opacity-75 transition-opacity">
+                <Phone className="w-4 h-4" />
+                <span>+254 702 113 628</span>
+              </a>
+              <a href="https://wa.me/254702113628" className="flex items-center gap-2 text-sm hover:opacity-75 transition-opacity text-green-600">
+                <MessageCircle className="w-4 h-4" />
+                <span>WhatsApp</span>
+              </a>
+              <a href="mailto:info@electromatt.co.ke" className="flex items-center gap-2 text-sm hover:opacity-75 transition-opacity">
+                <Mail className="w-4 h-4" />
+                <span>info@electromatt.co.ke</span>
+              </a>
+              <div className="flex items-start gap-2 text-sm opacity-75">
+                <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                <div>
+                  <div>Agro House, Moi Avenue</div>
+                  <div>1st Floor, Room 35</div>
+                  <div>Nairobi, Kenya</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Links */}
+          <div>
+            <h3 className="font-semibold mb-3 text-base">Quick Links</h3>
+            <div className="space-y-2 text-sm">
+              <Link href="/products" className="block opacity-75 hover:opacity-100 transition-opacity">
+                Products
+              </Link>
+              <Link href="/categories" className="block opacity-75 hover:opacity-100 transition-opacity">
+                Categories
+              </Link>
+              <Link href="/blog" className="block opacity-75 hover:opacity-100 transition-opacity">
+                Tech Blog
+              </Link>
+              <Link href="/about" className="block opacity-75 hover:opacity-100 transition-opacity">
+                About Us
+              </Link>
+              <Link href="/contact" className="block opacity-75 hover:opacity-100 transition-opacity">
+                Contact
+              </Link>
+              <Link href="/testimonials" className="block opacity-75 hover:opacity-100 transition-opacity">
+                Customer Reviews
+              </Link>
+            </div>
+          </div>
+
+          {/* Newsletter */}
+          <div>
+            <h3 className="font-semibold mb-3 text-base">Stay Updated</h3>
+            <p className="text-sm opacity-75 mb-3 leading-relaxed">
+              Subscribe to get the latest deals, tech news, and product updates.
+            </p>
+            <div className="space-y-2">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="w-full px-3 py-2 text-sm bg-primary-foreground/10 border border-primary-foreground/20 rounded-lg text-primary-foreground placeholder:text-primary-foreground/50 focus:outline-none focus:border-primary-foreground/40 focus:bg-primary-foreground/15"
+              />
+              <button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                Subscribe to Newsletter
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Copyright */}
-        <div className="border-t border-primary-foreground/20 mt-8 pt-8 text-center text-sm opacity-75">
-          <p>&copy; 2025 Electromatt. All rights reserved.</p>
+        {/* Bottom Bar */}
+        <div className="border-t border-primary-foreground/20 pt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-sm">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+            <span>&copy; 2026 <span className="font-semibold">Electromatt</span>. All rights reserved.</span>
+            {/* <div className="flex items-center gap-4">
+              <a href="#" className="opacity-75 hover:opacity-100 transition-opacity">Privacy Policy</a>
+              <a href="#" className="opacity-75 hover:opacity-100 transition-opacity">Terms of Service</a>
+            </div> */}
+          </div>
+          <div className="text-xs opacity-60">
+            Trusted electronics retailer in Kenya
+          </div>
         </div>
       </div>
     </footer>

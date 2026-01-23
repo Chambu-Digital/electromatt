@@ -5,8 +5,10 @@ import Header from '@/components/header'
 import Footer from '@/components/footer'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { Trash2, Plus, Minus } from 'lucide-react'
+import { Trash2, Plus, Minus, MessageCircle, ArrowRight } from 'lucide-react'
 import { useCartStore } from '@/lib/cart-store'
+import { generateOrderMessage, sendWhatsAppMessage } from '@/lib/whatsapp-service'
+import { toast } from 'sonner'
 
 export default function CartPage() {
   const { 
@@ -18,6 +20,44 @@ export default function CartPage() {
     getTotalPrice, 
     getTotalItems 
   } = useCartStore()
+
+  const handleWhatsAppCheckout = () => {
+    if (cartItems.length === 0) {
+      toast.error('Your cart is empty')
+      return
+    }
+
+    // Format cart items for WhatsApp message
+    const orderItems = cartItems.map(item => ({
+      name: `${item.name}${item.selectedSize ? ` (${item.selectedSize})` : ''}${item.selectedScent ? ` - ${item.selectedScent}` : ''}`,
+      quantity: item.quantity,
+      price: item.price * item.quantity
+    }))
+
+    // Generate WhatsApp message
+    const message = `Hello ELECTROMATT Store!
+
+I would like to place an order:
+
+ORDER DETAILS:
+${orderItems.map(item => 
+  `${item.name}
+Qty: ${item.quantity} x KSH ${(item.price / item.quantity).toLocaleString()}
+Subtotal: KSH ${item.price.toLocaleString()}`
+).join('\n\n')}
+
+TOTAL: KSH ${getTotalPrice().toLocaleString()}
+
+Please confirm my order and provide payment details.
+
+Thank you!`
+
+    // Send to WhatsApp
+    sendWhatsAppMessage(message, '254702113628')
+    
+    // Show success message
+    toast.success('Redirecting to WhatsApp...')
+  }
 
   if (!isLoaded) {
     return (
@@ -333,11 +373,32 @@ export default function CartPage() {
                 </div>
 
                 <div className="space-y-3">
+                  {/* WhatsApp Checkout Button */}
+                  <Button 
+                    onClick={handleWhatsAppCheckout}
+                    className="w-full bg-green-600 hover:bg-green-700 text-white py-3"
+                  >
+                    <MessageCircle className="w-5 h-5 mr-2" />
+                    Order via WhatsApp
+                  </Button>
+                  
+                  {/* Future Online Payment - Disabled for now */}
                   <Link href="/checkout">
-                    <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-3">
-                      Proceed to Checkout
+                    <Button 
+                      className="w-full bg-gray-400 text-gray-600 py-3 cursor-not-allowed opacity-50"
+                      disabled
+                    >
+                      Online Payment (Coming Soon)
+                      {/* <ArrowRight className="w-5 h-5 ml-2" /> */}
                     </Button>
                   </Link>
+                </div>
+
+                {/* WhatsApp Notice */}
+                <div className="mt-4 bg-green-50 border border-green-200 rounded-lg p-3">
+                  <p className="text-sm text-green-800 text-center">
+                     Orders are processed via WhatsApp for personalized service
+                  </p>
                 </div>
 
                 <Link href="/" className="block mt-4">

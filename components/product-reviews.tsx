@@ -147,7 +147,7 @@ export default function ProductReviews({
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Customer Reviews</CardTitle>
+          <CardTitle></CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-center py-8 text-gray-500">

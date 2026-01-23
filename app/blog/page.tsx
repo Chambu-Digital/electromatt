@@ -1,15 +1,16 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { Calendar, User, Tag, ArrowRight } from 'lucide-react'
+import { Calendar, ArrowRight } from 'lucide-react'
 import { IBlogPost } from '@/models/BlogPost'
 import { getBlogPosts } from '@/lib/blog-service'
+import Breadcrumb from '@/components/breadcrumb'
 import Header from '@/components/header'
 import Footer from '@/components/footer'
 
 export const metadata: Metadata = {
-  title: 'Natural Health Blog | Educational Content on Natural Remedies',
-  description: 'Discover the power of natural remedies through our educational blog. Learn about herbs, natural skincare, digestive health, and holistic wellness approaches.',
-  keywords: 'natural remedies, herbal medicine, natural health, wellness blog, holistic health'
+  title: 'Our Blog | Electronics Reviews, Tips & Tech News',
+  description: 'Stay updated with the latest electronics reviews, buying guides, tech tips, and product comparisons. Your trusted source for electronics knowledge.',
+  keywords: 'electronics blog, product reviews, tech news, buying guides, electronics tips, appliance reviews'
 }
 
 async function fetchBlogPosts() {
@@ -18,115 +19,194 @@ async function fetchBlogPosts() {
     return data.posts || []
   } catch (error) {
     console.error('Error fetching blog posts:', error)
+    // Return empty array to show featured content instead
     return []
   }
 }
 
 export default async function BlogPage() {
-  const posts: IBlogPost[] = await fetchBlogPosts()
+  let posts: IBlogPost[] = []
+  
+  try {
+    posts = await fetchBlogPosts()
+  } catch (error) {
+    console.error('Failed to fetch blog posts:', error)
+    // Continue with empty posts array to show featured content
+  }
+
+  // Simplified featured content - only 4 posts
+  const featuredContent = [
+    {
+      id: 1,
+      title: "Smart Home Revolution with Electromatt",
+      excerpt: "Discover the latest smart home devices that are changing how we live.",
+      category: "Smart Home",
+      image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600",
+      date: "Jan 20, 2025",
+      slug: "smart-home-revolution"
+    },
+    {
+      id: 2,
+      title: "Kitchen Electronics Buying Guide",
+      excerpt: "Essential appliances that will revolutionize your cooking experience.",
+      category: "Kitchen Tech",
+      image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600",
+      date: "Jan 18, 2025",
+      slug: "kitchen-electronics-guide"
+    },
+    {
+      id: 3,
+      title: "TV Technology: OLED vs QLED vs LED",
+      excerpt: "Which display technology is right for your entertainment setup?",
+      category: "Entertainment",
+      image: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=600",
+      date: "Jan 15, 2025",
+      slug: "tv-technology-explained"
+    },
+    {
+      id: 4,
+      title: "Mobile Phone Maintenance Tips",
+      excerpt: "Keep your smartphone running like new with these essential tips.",
+      category: "Mobile Tech",
+      image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600",
+      date: "Jan 12, 2025",
+      slug: "mobile-maintenance-tips"
+    }
+  ]
+
+  const breadcrumbItems = [
+    { label: 'Home', href: '/' },
+    { label: 'Blog', href: '/blog' }
+  ]
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen bg-background">
       <Header />
       
-      {/* Hero Section */}
-      <div className="bg-gradient-to-r from-green-600 to-green-700 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      {/* Compact Hero Section */}
+      <div className="bg-primary text-primary-foreground">
+        <div className="max-w-5xl mx-auto px-4 py-6">
           <div className="text-center">
-            <h1 className="text-4xl font-bold mb-4">Natural Health Blog</h1>
-            <p className="text-xl text-green-100 max-w-3xl mx-auto">
-              Discover the power of natural remedies and learn how to enhance your wellness journey 
-              with time-tested herbal solutions and holistic health approaches.
+            <h1 className="text-3xl font-bold mb-3">Our  Blog</h1>
+            <p className="text-primary-foreground/90">
+              Electronics reviews, buying guides, and tech tips
             </p>
           </div>
         </div>
       </div>
 
       {/* Blog Posts */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <main className="flex-1 max-w-5xl mx-auto px-4 py-6">
+        <Breadcrumb items={breadcrumbItems} />
+        
         {posts.length === 0 ? (
-          <div className="text-center py-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Coming Soon</h2>
-            <p className="text-gray-600">
-              We're working on creating valuable content about natural remedies and wellness. 
-              Check back soon for educational articles and health tips!
-            </p>
+          <div>
+            {/* Featured Content */}
+            <h2 className="text-2xl font-bold text-foreground mb-6 text-center">Latest Articles</h2>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-6">
+              {featuredContent.map((post) => (
+                <article key={post.id} className="bg-card rounded-lg overflow-hidden hover:shadow-md transition-shadow group border">
+                  <img
+                    src={post.image}
+                    alt={post.title}
+                    className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  
+                  <div className="p-3">
+                    <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
+                      <time>{post.date}</time>
+                      <span className="bg-primary/10 text-primary px-2 py-1 rounded text-xs">
+                        {post.category}
+                      </span>
+                    </div>
+
+                    <h3 className="font-semibold text-sm text-card-foreground mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+                      {post.title}
+                    </h3>
+
+                    <p className="text-muted-foreground mb-3 line-clamp-2 text-xs">
+                      {post.excerpt}
+                    </p>
+
+                    <Link href={`/blog/${post.slug}`} className="inline-flex items-center text-primary hover:text-primary/80 font-medium transition-colors text-xs">
+                      Read More
+                      <ArrowRight className="h-3 w-3 ml-1" />
+                    </Link>
+                  </div>
+                </article>
+              ))}
+            </div>
+
+            {/* Compact Newsletter */}
+            <div className="bg-muted/30 rounded-lg p-4 text-center">
+              <h3 className="font-semibold text-foreground mb-2">Stay Updated</h3>
+              <p className="text-muted-foreground mb-3 text-sm">
+                Get electronics news and deals
+              </p>
+              <div className="flex gap-2 max-w-sm mx-auto">
+                <input
+                  type="email"
+                  placeholder="Enter email"
+                  className="flex-1 px-3 py-2 border border-input rounded text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                />
+                <button className="bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded font-medium transition-colors text-sm">
+                  Subscribe
+                </button>
+              </div>
+            </div>
           </div>
         ) : (
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {posts.map((post) => (
               <Link key={post._id} href={`/blog/${post.slug}`}>
-                <article className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
+                <article className="bg-card rounded-lg overflow-hidden hover:shadow-md transition-shadow cursor-pointer group border">
                   {post.featuredImage && (
-                    <div className="aspect-w-16 aspect-h-9">
-                      <img
-                        src={post.featuredImage}
-                        alt={post.title}
-                        className="w-full h-48 object-cover"
-                      />
-                    </div>
+                    <img
+                      src={post.featuredImage}
+                      alt={post.title}
+                      className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
                   )}
                   
-                  <div className="p-6">
-                    <div className="flex items-center text-sm text-gray-500 mb-3">
-                      <Calendar className="h-4 w-4 mr-1" />
+                  <div className="p-3">
+                    <div className="flex items-center text-xs text-muted-foreground mb-2">
+                      <Calendar className="h-3 w-3 mr-1" />
                       <time dateTime={post.publishedAt?.toString()}>
                         {post.publishedAt 
                           ? new Date(post.publishedAt).toLocaleDateString('en-US', {
-                              year: 'numeric',
-                              month: 'long',
+                              month: 'short',
                               day: 'numeric'
                             })
                           : new Date(post.createdAt).toLocaleDateString('en-US', {
-                              year: 'numeric',
-                              month: 'long',
+                              month: 'short',
                               day: 'numeric'
                             })
                         }
                       </time>
-                      {post.author && (
-                        <>
-                          <span className="mx-2">•</span>
-                          <User className="h-4 w-4 mr-1" />
-                          <span>{post.author}</span>
-                        </>
-                      )}
                     </div>
 
-                    <h2 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2 hover:text-green-600 transition-colors">
+                    <h2 className="font-semibold text-sm text-card-foreground mb-2 line-clamp-2 group-hover:text-primary transition-colors">
                       {post.title}
                     </h2>
 
-                    {post.subtitle && (
-                      <p className="text-gray-600 text-sm mb-3 line-clamp-1">{post.subtitle}</p>
-                    )}
-
-                    <p className="text-gray-700 mb-4 line-clamp-3">{post.excerpt}</p>
+                    <p className="text-muted-foreground mb-3 line-clamp-2 text-xs">{post.excerpt}</p>
 
                     {post.categories.length > 0 && (
-                      <div className="flex items-center mb-4">
-                        <Tag className="h-4 w-4 text-gray-400 mr-1" />
-                        <div className="flex flex-wrap gap-2">
-                          {post.categories.slice(0, 3).map((category) => (
-                            <span
-                              key={category}
-                              className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
-                            >
-                              {category}
-                            </span>
-                          ))}
-                          {post.categories.length > 3 && (
-                            <span className="text-xs text-gray-500">
-                              +{post.categories.length - 3} more
-                            </span>
-                          )}
-                        </div>
+                      <div className="flex flex-wrap gap-1 mb-2">
+                        {post.categories.slice(0, 2).map((category) => (
+                          <span
+                            key={category}
+                            className="inline-flex items-center px-2 py-1 rounded text-xs bg-primary/10 text-primary"
+                          >
+                            {category}
+                          </span>
+                        ))}
                       </div>
                     )}
 
-                    <div className="inline-flex items-center text-green-600 hover:text-green-700 font-medium transition-colors">
+                    <div className="inline-flex items-center text-primary hover:text-primary/80 font-medium transition-colors text-xs">
                       Read More
-                      <ArrowRight className="h-4 w-4 ml-1" />
+                      <ArrowRight className="h-3 w-3 ml-1" />
                     </div>
                   </div>
                 </article>
@@ -134,16 +214,7 @@ export default async function BlogPage() {
             ))}
           </div>
         )}
-
-        {/* Categories Filter - Future Enhancement */}
-        {posts.length > 0 && (
-          <div className="mt-12 text-center">
-            <p className="text-gray-600">
-              Explore topics: Natural Remedies • Herbal Medicine • Wellness Tips • Holistic Health
-            </p>
-          </div>
-        )}
-      </div>
+      </main>
       
       <Footer />
     </div>

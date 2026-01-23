@@ -111,8 +111,19 @@ export default function Header() {
         <div className="hidden md:flex items-center justify-between h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-            <Zap className="w-8 h-8 text-primary" />
-            <h1 className="text-2xl font-bold text-primary">Electromatt</h1>
+            <img 
+              src="/electromatt-logo.svg" 
+              alt="Electromatt Logo" 
+              className="w-8 h-8"
+              onError={(e) => {
+                // Fallback to Zap icon if image fails to load
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+                target.nextElementSibling?.classList.remove('hidden');
+              }}
+            />
+            <Zap className="w-8 h-8 text-primary hidden" />
+            <h1 className="text-2xl font-black text-primary uppercase tracking-wide">ELECTROMATT</h1>
           </Link>
 
           {/* Navigation Links */}
@@ -146,6 +157,12 @@ export default function Header() {
                 </div>
               )}
             </div>
+            
+            <Link href="/products">
+              <Button variant="ghost">
+                Products
+              </Button>
+            </Link>
             
             <Link href="/blog">
               <Button variant="ghost">
@@ -246,7 +263,7 @@ export default function Header() {
         <div className="md:hidden flex items-center justify-between h-16">
           <Link href="/" className="flex items-center gap-2">
             <Zap className="w-6 h-6 text-primary" />
-            <h1 className="text-lg font-bold text-primary">Electromatt</h1>
+            <h1 className="text-lg font-black text-primary uppercase tracking-wide">ELECTROMATT</h1>
           </Link>
 
           <div className="flex items-center gap-2">
@@ -344,6 +361,12 @@ export default function Header() {
                   </Button>
                 </Link>
               )}
+              
+              <Link href="/products">
+                <Button variant="ghost" className="justify-start w-full">
+                  Products
+                </Button>
+              </Link>
               
               <Link href="/blog">
                 <Button variant="ghost" className="justify-start w-full">

@@ -60,9 +60,16 @@ export default function AllProductsSection() {
   return (
     <section className="py-8 md:py-12 px-4 md:px-8">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-2xl md:text-3xl font-bold mb-8 text-foreground text-balance">
-          Browse All Products
-        </h2>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-foreground text-balance mb-4 sm:mb-0">
+           Our Products
+          </h2>
+          <Link href="/products">
+            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3">
+              View All Products
+            </Button>
+          </Link>
+        </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {loading ? (
@@ -149,17 +156,35 @@ export default function AllProductsSection() {
 
         {/* Load More Button */}
         {hasMore && !loading && (
-          <div className="text-center mt-8">
+          <div className="text-center mt-8 space-y-4">
             <Button
               onClick={handleLoadMore}
               disabled={loadingMore}
               variant="outline"
-              className="px-8 py-3"
+              className="px-8 py-3 mr-4"
             >
               {loadingMore ? 'Loading...' : 'Load More Products'}
             </Button>
+            <div className="text-sm text-muted-foreground">
+              or{' '}
+              <Link href="/products" className="text-primary hover:underline font-medium">
+                view all products on dedicated page
+              </Link>
+            </div>
           </div>
         )}
+
+        {/* When no more products to load */}
+        {/* {!hasMore && !loading && products.length > 0 && (
+          <div className="text-center mt-8">
+            <p className="text-muted-foreground mb-4">You've seen all products in this preview</p>
+            <Link href="/products">
+              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3">
+                View All Products with Filters
+              </Button>
+            </Link>
+          </div>
+        )} */}
       </div>
     </section>
   )

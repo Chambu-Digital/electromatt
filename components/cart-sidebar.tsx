@@ -1,10 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { X, Plus, Minus, ShoppingBag, Trash2, ArrowRight } from 'lucide-react'
+import { X, Plus, Minus, ShoppingBag, Trash2, ArrowRight, MessageCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { useCartStore } from '@/lib/cart-store'
+import { generateOrderMessage, sendWhatsAppMessage } from '@/lib/whatsapp-service'
 import { toast } from 'sonner'
 import Link from 'next/link'
 
@@ -16,23 +17,64 @@ export default function CartSidebar({ children }: CartSidebarProps) {
   const [isOpen, setIsOpen] = useState(false)
   const { items, updateQuantity, removeItem, getTotalPrice, getTotalItems, clearCart } = useCartStore()
 
-  const handleQuantityChange = (id: string, newQuantity: number) => {
+  const handleQuantityChange = (index: number, newQuantity: number) => {
     if (newQuantity <= 0) {
-      removeItem(id)
+      removeItem(index)
       toast.success('Item removed from cart')
     } else {
-      updateQuantity(id, newQuantity)
+      updateQuantity(index, newQuantity)
     }
   }
 
-  const handleRemoveItem = (id: string, name: string) => {
-    removeItem(id)
+  const handleRemoveItem = (index: number, name: string) => {
+    removeItem(index)
     toast.success(`${name} removed from cart`)
   }
 
   const handleClearCart = () => {
     clearCart()
     toast.success('Cart cleared')
+  }
+
+  const handleWhatsAppCheckout = () => {
+    if (items.length === 0) {
+      toast.error('Your cart is empty')
+      return
+    }
+
+    // Format cart items for WhatsApp message
+    const orderItems = items.map(item => ({
+      name: `${item.name}${item.selectedSize ? ` (${item.selectedSize})` : ''}${item.selectedScent ? ` - ${item.selectedScent}` : ''}`,
+      quantity: item.quantity,
+      price: item.price * item.quantity
+    }))
+
+    // Generate WhatsApp message
+    const message = `Hello ELECTROMATT Store!
+
+I would like to place an order:
+
+ORDER DETAILS:
+${orderItems.map(item => 
+  `${item.name}
+Qty: ${item.quantity} x KSH ${(item.price / item.quantity).toLocaleString()}
+Subtotal: KSH ${item.price.toLocaleString()}`
+).join('\n\n')}
+
+TOTAL: KSH ${getTotalPrice().toLocaleString()}
+
+Please confirm my order and provide payment details.
+
+Thank you!`
+
+    // Send to WhatsApp
+    sendWhatsAppMessage(message, '254702113628')
+    
+    // Close cart sidebar
+    setIsOpen(false)
+    
+    // Show success message
+    toast.success('Redirecting to WhatsApp...')
   }
 
   const totalItems = getTotalItems()
@@ -66,8 +108,8 @@ export default function CartSidebar({ children }: CartSidebarProps) {
               {/* Cart Items */}
               <div className="flex-1 overflow-y-auto py-6">
                 <div className="space-y-4">
-                  {items.map((item) => (
-                    <div key={`${item.id}-${item.variant?.id || 'default'}`} className="flex gap-4 p-4 bg-gray-50 rounded-lg">
+                  {items.map((item, index) => (
+                    <div key={`${item.id}-${item.selectedSize || 'default'}-${item.selectedScent || 'default'}`} className="flex gap-4 p-4 bg-gray-50 rounded-lg">
                       <div className="w-16 h-16 bg-white rounded-lg overflow-hidden flex-shrink-0">
                         <img
                           src={item.image || '/placeholder.svg'}
@@ -78,8 +120,12 @@ export default function CartSidebar({ children }: CartSidebarProps) {
                       
                       <div className="flex-1 min-w-0">
                         <h4 className="font-medium text-gray-900 truncate">{item.name}</h4>
-                        {item.variant && (
-                          <p className="text-sm text-gray-500">{item.variant.value}</p>
+                        {(item.selectedSize || item.selectedScent) && (
+                          <div className="text-sm text-gray-500">
+                            {item.selectedSize && <span>Size: {item.selectedSize}</span>}
+                            {item.selectedSize && item.selectedScent && <span> • </span>}
+                            {item.selectedScent && <span>Scent: {item.selectedScent}</span>}
+                          </div>
                         )}
                         <p className="text-lg font-bold text-primary">
                           KSH {item.price.toLocaleString()}
@@ -92,7 +138,7 @@ export default function CartSidebar({ children }: CartSidebarProps) {
                               variant="ghost"
                               size="icon"
                               className="h-8 w-8"
-                              onClick={() => handleQuantityChange(`${item.id}-${item.variant?.id || 'default'}`, item.quantity - 1)}
+                              onClick={() => handleQuantityChange(index, item.quantity - 1)}
                             >
                               <Minus className="w-3 h-3" />
                             </Button>
@@ -103,7 +149,7 @@ export default function CartSidebar({ children }: CartSidebarProps) {
                               variant="ghost"
                               size="icon"
                               className="h-8 w-8"
-                              onClick={() => handleQuantityChange(`${item.id}-${item.variant?.id || 'default'}`, item.quantity + 1)}
+                              onClick={() => handleQuantityChange(index, item.quantity + 1)}
                             >
                               <Plus className="w-3 h-3" />
                             </Button>
@@ -113,7 +159,7 @@ export default function CartSidebar({ children }: CartSidebarProps) {
                             variant="ghost"
                             size="icon"
                             className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50"
-                            onClick={() => handleRemoveItem(`${item.id}-${item.variant?.id || 'default'}`, item.name)}
+                            onClick={() => handleRemoveItem(index, item.name)}
                           >
                             <Trash2 className="w-3 h-3" />
                           </Button>
@@ -140,10 +186,24 @@ export default function CartSidebar({ children }: CartSidebarProps) {
                 </div>
 
                 <div className="space-y-3">
+                  {/* WhatsApp Checkout Button */}
+                  <Button 
+                    onClick={handleWhatsAppCheckout}
+                    className="w-full h-12 text-lg bg-green-600 hover:bg-green-700 text-white"
+                  >
+                    <MessageCircle className="w-5 h-5 mr-2" />
+                    Order via WhatsApp
+                  </Button>
+                  
+                  {/* Future M-Pesa Checkout - Disabled for now */}
                   <Link href="/checkout" onClick={() => setIsOpen(false)}>
-                    <Button className="w-full h-12 text-lg bg-primary hover:bg-primary/90">
-                      Proceed to Checkout
-                      <ArrowRight className="w-5 h-5 ml-2" />
+                    <Button 
+                      variant="outline" 
+                      className="w-full h-12 text-lg opacity-50 cursor-not-allowed"
+                      disabled
+                    >
+                      Online Payment (Coming Soon)
+                      {/* <ArrowRight className="w-5 h-5 ml-2" /> */}
                     </Button>
                   </Link>
                   
@@ -162,10 +222,17 @@ export default function CartSidebar({ children }: CartSidebarProps) {
                   </Button>
                 </div>
 
-                {/* Free Delivery Notice */}
+                {/* WhatsApp Notice */}
                 <div className="bg-green-50 border border-green-200 rounded-lg p-3">
                   <p className="text-sm text-green-800 text-center">
-                    🚚 Free delivery within Nairobi for orders over KSH 10,000
+                     Orders are processed via WhatsApp for personalized service
+                  </p>
+                </div>
+
+                {/* Free Delivery Notice */}
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                  <p className="text-sm text-blue-800 text-center">
+                     Free delivery within Nairobi for orders over KSH 10,000
                   </p>
                 </div>
               </div>
