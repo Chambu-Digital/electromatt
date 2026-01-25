@@ -7,14 +7,15 @@
 
 ## Overview
 
-This repository will stay in sync with your deployed chats on [v0.app](https://v0.app).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.app](https://v0.app).
+Electromatt is a modern, responsive website built to showcase electrical products and services, providing customers with an easy way to explore offerings, learn about the brand, and get in touch.
+
+This project focuses on clean UI, performance, and scalability, making it suitable for both business presentation and future expansion (e-commerce, dashboards, integrations).
 
 ## Deployment
 
 Your project is live at:
 
-**[https://vercel.com/chambudigital-8594s-projects/v0-serenleaf-natural-website](https://vercel.com/chambudigital-8594s-projects/v0-serenleaf-natural-website)**
+**https://www.electromatt.co.ke/**
 
 ## Build your app
 
@@ -22,9 +23,16 @@ Continue building your app on:
 
 **[https://v0.app/chat/dkAg2muy4BC](https://v0.app/chat/dkAg2muy4BC)**
 
-## How It Works
+## features
 
-1. Create and modify your project using [v0.app](https://v0.app)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+Responsive and mobile-friendly design
+
+Clean, modern user interface
+
+Service and product showcase
+
+Contact and inquiry functionality
+
+SEO-friendly structure
+
+Fast loading and optimized assets
