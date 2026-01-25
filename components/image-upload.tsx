@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react'
 import { Upload, X, Image as ImageIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { useToast } from '@/components/ui/custom-toast'
 
 interface ImageUploadProps {
   onUpload: (imageUrl: string) => void
@@ -22,6 +23,7 @@ export default function ImageUpload({
   const [uploading, setUploading] = useState(false)
   const [dragOver, setDragOver] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const toast = useToast()
 
   const handleFileSelect = async (file: File) => {
     if (!file) return
@@ -29,14 +31,14 @@ export default function ImageUpload({
     // Validate file type
     const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
     if (!allowedTypes.includes(file.type)) {
-      alert('Please select a valid image file (JPEG, PNG, GIF, or WebP)')
+      toast.error('Please select a valid image file (JPEG, PNG, GIF, or WebP)')
       return
     }
 
     // Validate file size (20MB limit)
     const maxSize = 20 * 1024 * 1024
     if (file.size > maxSize) {
-      alert('File size must be less than 20MB')
+      toast.error('File size must be less than 20MB')
       return
     }
 
@@ -68,7 +70,7 @@ export default function ImageUpload({
     } catch (error) {
       console.error('Upload error:', error)
       const errorMessage = error instanceof Error ? error.message : 'Upload failed. Please try again.'
-      alert(errorMessage)
+      toast.error(errorMessage)
     } finally {
       setUploading(false)
     }

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import ActiveRatingDisplay from '@/components/active-rating-display'
 import { IProduct } from '@/models/Product'
 import { getProductDisplayImage, getProductDisplayPrice } from '@/lib/product-utils'
 
@@ -118,23 +119,12 @@ export default function AllProductsSection() {
                       </h3>
                     </Link>
 
-                    <div className="flex items-center gap-1 mb-3">
-                      <div className="flex">
-                        {Array(5).fill(0).map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`w-3 h-3 ${
-                              i < Math.floor(product.rating)
-                                ? 'fill-secondary text-secondary'
-                                : 'text-muted-foreground'
-                            }`}
-                          />
-                        ))}
-                      </div>
-                      <span className="text-xs text-muted-foreground">
-                        ({product.reviews})
-                      </span>
-                    </div>
+                    <ActiveRatingDisplay 
+                      productId={product._id || ''}
+                      initialRating={product.rating}
+                      initialReviews={product.reviews}
+                      size="sm"
+                    />
 
                     <div className="flex items-center gap-2 mb-4">
                       <span className="text-base font-bold text-primary">
@@ -165,12 +155,12 @@ export default function AllProductsSection() {
             >
               {loadingMore ? 'Loading...' : 'Load More Products'}
             </Button>
-            <div className="text-sm text-muted-foreground">
+            {/* <div className="text-sm text-muted-foreground">
               or{' '}
               <Link href="/products" className="text-primary hover:underline font-medium">
-                view all products on dedicated page
+                view all products
               </Link>
-            </div>
+            </div> */}
           </div>
         )}
 

@@ -1,115 +1,165 @@
 'use client'
 
-import { Mail, Phone, MapPin, Clock, MessageCircle } from 'lucide-react'
+import { Mail, Phone, MapPin, Clock, MessageCircle, Zap } from 'lucide-react'
 import Link from 'next/link'
 
 export default function Footer() {
   return (
     <footer className="bg-foreground text-primary-foreground">
-      <div className="max-w-6xl mx-auto px-4 py-8 md:py-10">
+      <div className="max-w-7xl mx-auto px-6 py-12 md:py-16">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-8 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 mb-10">
           {/* Brand & Description */}
-          <div className="md:col-span-1">
-            <div className="flex items-center gap-2 mb-3">
+          <div className="md:col-span-1 space-y-6">
+            <div className="flex items-center gap-3 mb-4">
               <img 
-                src="/electromatt-logo.svg" 
+                src="/electromatt-icon-only.svg" 
                 alt="Electromatt Logo" 
-                className="w-6 h-6"
+                className="w-10 h-10 transition-transform duration-200 hover:scale-105"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                  target.nextElementSibling?.classList.remove('hidden');
+                }}
               />
-              <h2 className="text-lg font-black uppercase tracking-wide">ELECTROMATT</h2>
+              <div className="hidden">
+                <Zap className="w-10 h-10 text-primary" />
+              </div>
+              <h2 className="text-xl font-black uppercase tracking-wide">ELECTROMATT</h2>
             </div>
-            <p className="text-sm opacity-90 mb-4 leading-relaxed">
-              Kenya's trusted electronics retailer since 2018. Quality appliances, competitive prices, exceptional service.
+            <p className="text-base opacity-90 leading-relaxed max-w-sm">
+              Kenya's trusted electronics retailer. Quality appliances, competitive prices, exceptional service.
             </p>
-            <div className="flex items-center gap-2 text-sm opacity-75">
-              <Clock className="w-4 h-4" />
-              <span>Mon-Fri: 8AM-6PM</span>
+            <div className="flex items-center gap-3 text-sm opacity-80 bg-primary-foreground/5 px-4 py-3 rounded-lg">
+              <Clock className="w-5 h-5 text-primary" />
+              <div>
+                <div className="font-medium">Business Hours</div>
+                <div className="text-xs opacity-75">Mon-Fri: 8AM-6PM, Sat: 9AM-5PM</div>
+              </div>
             </div>
           </div>
 
           {/* Contact Information */}
-          <div>
-            <h3 className="font-semibold mb-3 text-base">Contact Us</h3>
-            <div className="space-y-2">
-              <a href="tel:+254702113628" className="flex items-center gap-2 text-sm hover:opacity-75 transition-opacity">
-                <Phone className="w-4 h-4" />
-                <span>+254 702 113 628</span>
-              </a>
-              <a href="https://wa.me/254702113628" className="flex items-center gap-2 text-sm hover:opacity-75 transition-opacity text-green-600">
-                <MessageCircle className="w-4 h-4" />
-                <span>WhatsApp</span>
-              </a>
-              <a href="mailto:info@electromatt.co.ke" className="flex items-center gap-2 text-sm hover:opacity-75 transition-opacity">
-                <Mail className="w-4 h-4" />
-                <span>info@electromatt.co.ke</span>
-              </a>
-              <div className="flex items-start gap-2 text-sm opacity-75">
-                <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
+          <div className="space-y-6">
+            <h3 className="text-lg font-bold mb-4 text-primary">Contact Us</h3>
+            <div className="space-y-4">
+              <a 
+                href="tel:+254713065412" 
+                className="flex items-center gap-3 text-sm hover:text-primary transition-colors duration-200 group"
+              >
+                <div className="bg-primary-foreground/10 p-2 rounded-lg group-hover:bg-primary/20 transition-colors">
+                  <Phone className="w-4 h-4" />
+                </div>
                 <div>
-                  <div>Agro House, Moi Avenue</div>
-                  <div>1st Floor, Room 35</div>
-                  <div>Nairobi, Kenya</div>
+                  <div className="font-medium">Call Us</div>
+                  <div className="text-xs opacity-75">+254 713 065 412</div>
+                </div>
+              </a>
+              
+              <a 
+                href="https://wa.me/254713065412" 
+                className="flex items-center gap-3 text-sm hover:text-green-400 transition-colors duration-200 group"
+              >
+                <div className="bg-green-600/20 p-2 rounded-lg group-hover:bg-green-600/30 transition-colors">
+                  <MessageCircle className="w-4 h-4 text-green-400" />
+                </div>
+                <div>
+                  <div className="font-medium text-green-400">WhatsApp</div>
+                  <div className="text-xs opacity-75">Quick Support</div>
+                </div>
+              </a>
+              
+              <a 
+                href="mailto:sales@electromatt.co.ke" 
+                className="flex items-center gap-3 text-sm hover:text-primary transition-colors duration-200 group"
+              >
+                <div className="bg-primary-foreground/10 p-2 rounded-lg group-hover:bg-primary/20 transition-colors">
+                  <Mail className="w-4 h-4" />
+                </div>
+                <div>
+                  <div className="font-medium">Email Us</div>
+                  <div className="text-xs opacity-75">sales@electromatt.co.ke</div>
+                </div>
+              </a>
+              
+              <div className="flex items-start gap-3 text-sm opacity-80">
+                <div className="bg-primary-foreground/10 p-2 rounded-lg">
+                  <MapPin className="w-4 h-4" />
+                </div>
+                <div>
+                  <div className="font-medium">Visit Our Store</div>
+                  <div className="text-xs opacity-75 leading-relaxed">
+                    Taveta Lane, Nairobi<br />
+                    <span className="text-xs opacity-60">Premium Electronics</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Quick Links */}
-          <div>
-            <h3 className="font-semibold mb-3 text-base">Quick Links</h3>
-            <div className="space-y-2 text-sm">
-              <Link href="/products" className="block opacity-75 hover:opacity-100 transition-opacity">
+          <div className="space-y-6">
+            <h3 className="text-lg font-bold mb-4 text-primary">Quick Links</h3>
+            <div className="grid grid-cols-2 gap-3 text-sm">
+              <Link 
+                href="/products" 
+                className="opacity-80 hover:opacity-100 hover:text-primary transition-all duration-200 py-1"
+              >
                 Products
               </Link>
-              <Link href="/categories" className="block opacity-75 hover:opacity-100 transition-opacity">
+              <Link 
+                href="/categories" 
+                className="opacity-80 hover:opacity-100 hover:text-primary transition-all duration-200 py-1"
+              >
                 Categories
               </Link>
-              <Link href="/blog" className="block opacity-75 hover:opacity-100 transition-opacity">
+              {/* <Link 
+                href="/blog" 
+                className="opacity-80 hover:opacity-100 hover:text-primary transition-all duration-200 py-1"
+              >
                 Tech Blog
-              </Link>
-              <Link href="/about" className="block opacity-75 hover:opacity-100 transition-opacity">
+              </Link> */}
+              <Link 
+                href="/about" 
+                className="opacity-80 hover:opacity-100 hover:text-primary transition-all duration-200 py-1"
+              >
                 About Us
               </Link>
-              <Link href="/contact" className="block opacity-75 hover:opacity-100 transition-opacity">
+              <Link 
+                href="/contact" 
+                className="opacity-80 hover:opacity-100 hover:text-primary transition-all duration-200 py-1"
+              >
                 Contact
               </Link>
-              <Link href="/testimonials" className="block opacity-75 hover:opacity-100 transition-opacity">
-                Customer Reviews
-              </Link>
+              {/* <Link 
+                href="/testimonials" 
+                className="opacity-80 hover:opacity-100 hover:text-primary transition-all duration-200 py-1"
+              >
+                Reviews
+              </Link> */}
             </div>
-          </div>
-
-          {/* Newsletter */}
-          <div>
-            <h3 className="font-semibold mb-3 text-base">Stay Updated</h3>
-            <p className="text-sm opacity-75 mb-3 leading-relaxed">
-              Subscribe to get the latest deals, tech news, and product updates.
-            </p>
-            <div className="space-y-2">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="w-full px-3 py-2 text-sm bg-primary-foreground/10 border border-primary-foreground/20 rounded-lg text-primary-foreground placeholder:text-primary-foreground/50 focus:outline-none focus:border-primary-foreground/40 focus:bg-primary-foreground/15"
-              />
-              <button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                Subscribe to Newsletter
-              </button>
+            
+            {/* Trust Badges */}
+            <div className="mt-6 pt-4 border-t border-primary-foreground/10">
+              <div className="text-xs opacity-60 space-y-1">
+                <div>✓ Genuine Products Only</div>
+                <div>✓ Warranty Guaranteed</div>
+                <div>✓ Fast Delivery</div>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-primary-foreground/20 pt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-sm">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-            <span>&copy; 2026 <span className="font-semibold">Electromatt</span>. All rights reserved.</span>
-            {/* <div className="flex items-center gap-4">
-              <a href="#" className="opacity-75 hover:opacity-100 transition-opacity">Privacy Policy</a>
-              <a href="#" className="opacity-75 hover:opacity-100 transition-opacity">Terms of Service</a>
-            </div> */}
+        <div className="border-t border-primary-foreground/20 pt-6 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
+            <span className="text-sm">
+              &copy; 2026 <span className="font-bold uppercase tracking-wide">ELECTROMATT</span>. All rights reserved.
+            </span>
           </div>
-          <div className="text-xs opacity-60">
-            Trusted electronics retailer in Kenya
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 text-xs opacity-70">
+            <span className="hidden sm:inline">•</span>
+            <span>Quality • Service • Value</span>
           </div>
         </div>
       </div>

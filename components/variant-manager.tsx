@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Plus, Edit, Trash2, Package } from 'lucide-react'
+import { useToast } from '@/components/ui/custom-toast'
 import ImageUpload from '@/components/image-upload'
 import { IVariant } from '@/models/Product'
 
@@ -35,6 +36,7 @@ const variantTypes = [
 export default function VariantManager({ variants, onVariantsChange }: VariantManagerProps) {
   const [showForm, setShowForm] = useState(false)
   const [editingVariant, setEditingVariant] = useState<string | null>(null)
+  const toast = useToast()
   const [formData, setFormData] = useState<VariantFormData>({
     type: 'size',
     value: '',
@@ -107,7 +109,7 @@ export default function VariantManager({ variants, onVariantsChange }: VariantMa
 
   const handleSubmit = () => {
     if (!formData.value || !formData.price || !formData.image || !formData.stock) {
-      alert('Please fill in all required fields')
+      toast.error('Please fill in all required fields')
       return
     }
 

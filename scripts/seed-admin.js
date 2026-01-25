@@ -111,7 +111,7 @@ async function seedAdmin() {
         lastName: 'Admin',
         email: 'admin@electromatt.co.ke',
         password: 'admin123', // Will be hashed by the pre-save hook
-        phone: '+254702113628',
+        phone: '+254713065412',
         role: 'super_admin',
         isActive: true,
         isEmailVerified: true,

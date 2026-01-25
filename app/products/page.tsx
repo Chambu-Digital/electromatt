@@ -11,6 +11,7 @@ import ViewToggle from '@/components/view-toggle'
 import Breadcrumb from '@/components/breadcrumb'
 import Header from '@/components/header'
 import Footer from '@/components/footer'
+import ActiveRatingDisplay from '@/components/active-rating-display'
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<IProduct[]>([])
@@ -336,23 +337,12 @@ export default function ProductsPage() {
                         </h3>
                       </Link>
 
-                      <div className="flex items-center gap-1 mb-2">
-                        <div className="flex">
-                          {Array(5).fill(0).map((_, i) => (
-                            <Star
-                              key={i}
-                              className={`w-3 h-3 ${
-                                i < Math.floor(product.rating)
-                                  ? 'fill-secondary text-secondary'
-                                  : 'text-muted-foreground'
-                              }`}
-                            />
-                          ))}
-                        </div>
-                        <span className="text-xs text-muted-foreground">
-                          ({product.reviews})
-                        </span>
-                      </div>
+                      <ActiveRatingDisplay 
+                        productId={product._id || ''}
+                        initialRating={product.rating}
+                        initialReviews={product.reviews}
+                        size="sm"
+                      />
 
                       <div className="flex items-center gap-2 mb-2">
                         <span className="text-base font-bold text-primary">

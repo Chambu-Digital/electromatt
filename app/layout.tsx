@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
-import { Toaster } from 'sonner'
+import { ToastProvider } from '@/components/ui/custom-toast'
 import GoogleOAuthProvider from '@/components/providers/google-oauth-provider'
 import './globals.css'
 
@@ -18,19 +18,16 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: '/electromatt-logo.svg',
+        url: '/favicon.svg',
         type: 'image/svg+xml',
       },
       {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
+        url: '/electromatt-icon-only.svg',
+        type: 'image/svg+xml',
       },
     ],
-    apple: '/electromatt-logo.svg',
+    apple: '/electromatt-icon-only.svg',
+    shortcut: '/favicon.svg',
   },
 }
 
@@ -43,10 +40,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.variable} font-sans antialiased leading-relaxed`}>
         <GoogleOAuthProvider>
-          {children}
+          <ToastProvider>
+            {children}
+            <Analytics />
+          </ToastProvider>
         </GoogleOAuthProvider>
-        <Toaster />
-        <Analytics />
       </body>
     </html>
   )

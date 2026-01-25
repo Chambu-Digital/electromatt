@@ -65,11 +65,9 @@ export default function AboutPage() {
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6">Our Story</h2>
             <p className="text-muted-foreground leading-relaxed mb-4">
-              Founded in 2018, Electromatt has grown from a small Nairobi shop to Kenya's trusted electronics retailer. We partner with leading brands like Samsung, LG, Sony, and Apple to bring you quality technology at competitive prices.
+             Electromatt has grown from a small Nairobi shop to Kenya's trusted electronics retailer. We partner with leading brands like Samsung, LG, Sony, and Apple to bring you quality technology at competitive prices.
             </p>
-            <p className="text-sm text-muted-foreground">
-              Located at Agro House, Moi Avenue - Your one-stop destination for electronics and appliances.
-            </p>
+ 
           </div>
         </section>
 
@@ -84,9 +82,8 @@ export default function AboutPage() {
                 <div>
                   <h3 className="text-lg font-semibold text-card-foreground mb-3">Location & Contact</h3>
                   <div className="space-y-1 text-sm text-muted-foreground">
-                    <p>Agro House, Moi Avenue, 1st Floor Rm 35</p>
-                    <p>Phone: +254 702 113 628</p>
-                    <p>Email: info@electromatt.co.ke</p>
+                    <p>Phone: +254 713 065 412</p>
+                    <p>Email: sales@electromatt.co.ke</p>
                   </div>
                 </div>
                 <div>

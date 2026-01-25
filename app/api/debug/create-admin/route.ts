@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
       lastName: 'Admin',
       email: 'admin@electromatt.co.ke',
       password: 'admin123',
-      phone: '+254702113628',
+      phone: '+254713065412',
       role: 'super_admin',
       isActive: true,
       isEmailVerified: true,

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Star, Upload, X } from 'lucide-react'
+import { useToast } from '@/components/ui/custom-toast'
 interface ReviewFormProps {
   productId: string
   orderId: string
@@ -30,6 +31,7 @@ export default function ReviewForm({
   const [images, setImages] = useState<string[]>([])
   const [uploading, setUploading] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+  const toast = useToast()
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
@@ -71,7 +73,7 @@ export default function ReviewForm({
     e.preventDefault()
     
     if (!rating || !title.trim() || !comment.trim()) {
-      alert('Please fill in all required fields')
+      toast.error('Please fill in all required fields')
       return
     }
 
@@ -101,11 +103,11 @@ export default function ReviewForm({
         onSuccess?.()
       } else {
         const error = await response.json()
-        alert(error.error || 'Failed to submit review')
+        toast.error(error.error || 'Failed to submit review')
       }
     } catch (error) {
       console.error('Error submitting review:', error)
-      alert('Failed to submit review')
+      toast.error('Failed to submit review')
     } finally {
       setSubmitting(false)
     }
