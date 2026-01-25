@@ -86,20 +86,22 @@ export default function Header() {
         <div className="max-w-7xl mx-auto px-4 py-2">
           <div className="flex items-center justify-center md:justify-between text-sm text-muted-foreground">
             <div className="hidden md:flex items-center gap-6">
-              <a href="tel:+254702113628" className="flex items-center gap-2 hover:text-primary transition-colors">
+              <a href="tel:+254713065412" className="flex items-center gap-2 hover:text-primary transition-colors">
                 <Phone className="w-4 h-4" />
-                +254 702 113 628
+                +254 713 065 412
+
               </a>
-              <div className="flex items-center gap-2">
+              {/* <div className="flex items-center gap-2">
                 <MapPin className="w-4 h-4" />
                 Agro House, Moi Avenue, 1st Floor Rm 35
-              </div>
+              </div> */}
             </div>
             {/* Mobile - show only phone */}
             <div className="md:hidden">
-              <a href="tel:+254702113628" className="flex items-center gap-2 hover:text-primary transition-colors">
+              <a href="tel:+254713065412" className="flex items-center gap-2 hover:text-primary transition-colors">
                 <Phone className="w-4 h-4" />
-                +254 702 113 628
+               +254 713 065 412
+
               </a>
             </div>
           </div>
@@ -158,17 +160,17 @@ export default function Header() {
               )}
             </div>
             
-            <Link href="/products">
+            {/* <Link href="/products">
               <Button variant="ghost">
                 Products
               </Button>
-            </Link>
+            </Link> */}
             
-            <Link href="/blog">
+            {/* <Link href="/blog">
               <Button variant="ghost">
                 Blog
               </Button>
-            </Link>
+            </Link> */}
           </div>
 
           {/* Search Bar */}

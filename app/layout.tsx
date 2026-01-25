@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
-import { Toaster } from 'sonner'
+import { ToastProvider } from '@/components/ui/custom-toast'
 import GoogleOAuthProvider from '@/components/providers/google-oauth-provider'
 import './globals.css'
 
@@ -43,10 +43,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.variable} font-sans antialiased leading-relaxed`}>
         <GoogleOAuthProvider>
-          {children}
+          <ToastProvider>
+            {children}
+            <Analytics />
+          </ToastProvider>
         </GoogleOAuthProvider>
-        <Toaster />
-        <Analytics />
       </body>
     </html>
   )

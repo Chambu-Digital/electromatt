@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Star, ShoppingCart, Heart, Eye, Plus, Minus, Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useCartStore } from '@/lib/cart-store'
-import { toast } from 'sonner'
+import { useToast } from '@/components/ui/custom-toast'
 import Link from 'next/link'
 
 interface Product {
@@ -34,6 +34,7 @@ export default function ProductCard({ product, viewMode = 'grid' }: ProductCardP
   const [justAdded, setJustAdded] = useState(false)
   
   const { addItem } = useCartStore()
+  const toast = useToast()
 
   const discountPercentage = product.oldPrice 
     ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
@@ -57,13 +58,7 @@ export default function ProductCard({ product, viewMode = 'grid' }: ProductCardP
       })
       
       setJustAdded(true)
-      toast.success(`${product.name} added to cart!`, {
-        description: `Quantity: ${quantity}`,
-        action: {
-          label: 'View Cart',
-          onClick: () => window.location.href = '/cart'
-        }
-      })
+      toast.success(`${product.name} added to cart!`, `Quantity: ${quantity}`)
       
       // Reset the "just added" state after 2 seconds
       setTimeout(() => setJustAdded(false), 2000)

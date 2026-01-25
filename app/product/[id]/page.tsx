@@ -9,9 +9,11 @@ import ProductImageCarousel from '@/components/product-image-carousel'
 import ProductVariations from '@/components/product-variations'
 import RelatedProducts from '@/components/related-products'
 import ProductReviews from '@/components/product-reviews'
+import RatingSystemActivator from '@/components/rating-system-activator'
 import { IProduct, IVariant } from '@/models/Product'
 import { useCartStore } from '@/lib/cart-store'
 import { getProductDisplayPrice, getProductDisplayImage, calculateVariantPricing } from '@/lib/product-utils'
+import { useToast } from '@/components/ui/custom-toast'
 import Link from 'next/link'
 
 export default function ProductPage({ params }: { params: Promise<{ id: string }> }) {
@@ -28,6 +30,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
   const [realRating, setRealRating] = useState(0)
   const [realReviewCount, setRealReviewCount] = useState(0)
   const { addItem } = useCartStore()
+  const toast = useToast()
 
   useEffect(() => {
     fetchProduct()
@@ -140,7 +143,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
     
     // Create cart item with wholesale pricing data
     const cartItem = {
-      id: product._id!,
+      id: product._id || '',
       name: product.name,
       price: currentPrice,
       wholesalePrice: selectedVariant?.wholesalePrice || product.wholesalePrice,
@@ -158,7 +161,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
     // Show success feedback
     setTimeout(() => {
       setAddingToCart(false)
-      alert(`${product.name}${variantName ? ` (${variantName})` : ''} added to cart!`)
+      toast.success(`${product.name}${variantName ? ` (${variantName})` : ''} added to cart!`)
     }, 500)
   }
 
@@ -527,9 +530,16 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
 
         {/* Customer Reviews */}
         {product && (
-          <div className="mb-12">
+          <div className="mb-12 space-y-6">
+            {/* Rating System Activator */}
+            <RatingSystemActivator 
+              productId={product._id || ''}
+              productName={product.name}
+            />
+            
+            {/* Reviews Display */}
             <ProductReviews 
-              productId={product._id!}
+              productId={product._id || ''}
             />
           </div>
         )}
@@ -537,7 +547,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
         {/* Related Products */}
         {product && (
           <RelatedProducts 
-            currentProductId={product._id!} 
+            currentProductId={product._id || ''} 
             category={product.category} 
           />
         )}

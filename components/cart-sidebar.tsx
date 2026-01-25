@@ -5,8 +5,8 @@ import { X, Plus, Minus, ShoppingBag, Trash2, ArrowRight, MessageCircle } from '
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { useCartStore } from '@/lib/cart-store'
-import { generateOrderMessage, sendWhatsAppMessage } from '@/lib/whatsapp-service'
-import { toast } from 'sonner'
+import { generateOrderMessage, sendWhatsAppMessage, sendWhatsAppOrder } from '@/lib/whatsapp-service'
+import { useToast } from '@/components/ui/custom-toast'
 import Link from 'next/link'
 
 interface CartSidebarProps {
@@ -16,6 +16,7 @@ interface CartSidebarProps {
 export default function CartSidebar({ children }: CartSidebarProps) {
   const [isOpen, setIsOpen] = useState(false)
   const { items, updateQuantity, removeItem, getTotalPrice, getTotalItems, clearCart } = useCartStore()
+  const toast = useToast()
 
   const handleQuantityChange = (index: number, newQuantity: number) => {
     if (newQuantity <= 0) {
@@ -36,45 +37,49 @@ export default function CartSidebar({ children }: CartSidebarProps) {
     toast.success('Cart cleared')
   }
 
-  const handleWhatsAppCheckout = () => {
+  const handleWhatsAppCheckout = async () => {
     if (items.length === 0) {
       toast.error('Your cart is empty')
       return
     }
 
-    // Format cart items for WhatsApp message
+    // Format cart items for order recording
     const orderItems = items.map(item => ({
+      productId: item.id,
       name: `${item.name}${item.selectedSize ? ` (${item.selectedSize})` : ''}${item.selectedScent ? ` - ${item.selectedScent}` : ''}`,
       quantity: item.quantity,
-      price: item.price * item.quantity
+      price: item.price,
+      image: item.image,
+      variantId: item.variantId,
+      variantDetails: {
+        type: item.selectedSize ? 'size' : (item.selectedScent ? 'scent' : 'default'),
+        value: item.selectedSize || item.selectedScent || 'default',
+        sku: item.variantId || 'default'
+      }
     }))
 
-    // Generate WhatsApp message
-    const message = `Hello ELECTROMATT Store!
-
-I would like to place an order:
-
-ORDER DETAILS:
-${orderItems.map(item => 
-  `${item.name}
-Qty: ${item.quantity} x KSH ${(item.price / item.quantity).toLocaleString()}
-Subtotal: KSH ${item.price.toLocaleString()}`
-).join('\n\n')}
-
-TOTAL: KSH ${getTotalPrice().toLocaleString()}
-
-Please confirm my order and provide payment details.
-
-Thank you!`
-
-    // Send to WhatsApp
-    sendWhatsAppMessage(message, '254702113628')
-    
-    // Close cart sidebar
-    setIsOpen(false)
-    
-    // Show success message
-    toast.success('Redirecting to WhatsApp...')
+    try {
+      // Send WhatsApp order with automatic recording
+      await sendWhatsAppOrder(
+        'Customer', // Default name - customer will provide real name in WhatsApp
+        '+254713065412', // Placeholder - customer will provide real phone
+        orderItems,
+        { county: 'Nairobi', area: 'CBD' }, // Default location
+        'whatsapp@electromatt.co.ke' // Default email
+      )
+      
+      // Close cart sidebar
+      setIsOpen(false)
+      
+      // Clear cart after successful order
+      clearCart()
+      
+      // Show success message
+      toast.success('Order sent to WhatsApp and recorded in admin panel!')
+    } catch (error) {
+      console.error('Error processing WhatsApp order:', error)
+      toast.error('Failed to process order. Please try again.')
+    }
   }
 
   const totalItems = getTotalItems()

@@ -5,7 +5,7 @@ import { X, Star, ShoppingCart, Scale } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { useCartStore } from '@/lib/cart-store'
-import { toast } from 'sonner'
+import { useToast } from '@/components/ui/custom-toast'
 
 interface Product {
   _id: string
@@ -31,6 +31,7 @@ export default function ProductComparison({ isOpen, onClose, productIds }: Produ
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(false)
   const { addItem } = useCartStore()
+  const toast = useToast()
 
   useEffect(() => {
     if (isOpen && productIds.length > 0) {

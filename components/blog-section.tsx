@@ -107,99 +107,99 @@ export default function BlogSection() {
 
   const displayContent = posts.length > 0 ? posts : featuredTechContent
 
-  return (
-    <section className="py-8 md:py-12 px-4 md:px-8 bg-muted/20">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-3">
-            Tech News & Electronics Guide
-          </h2>
-          <p className="text-muted-foreground">
-            Stay updated with the latest electronics trends and buying guides
-          </p>
-        </div>
+  // return (
+  //   <section className="py-8 md:py-12 px-4 md:px-8 bg-muted/20">
+  //     <div className="max-w-6xl mx-auto">
+  //       {/* Header */}
+  //       <div className="text-center mb-8">
+  //         <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-3">
+  //           Tech News & Electronics Guide
+  //         </h2>
+  //         <p className="text-muted-foreground">
+  //           Stay updated with the latest electronics trends and buying guides
+  //         </p>
+  //       </div>
 
-        {/* Featured Content Grid */}
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
-          {displayContent.map((post, index) => {
-            // Handle both IBlogPost and featured content types
-            const isDbPost = '_id' in post
-            const postId = isDbPost ? post._id : (post as any).id
-            const postImage = isDbPost ? post.featuredImage : (post as any).image
-            const postCategory = isDbPost ? (post.categories?.[0] || 'Tech') : (post as any).category
-            const postDate = isDbPost 
-              ? (post.publishedAt 
-                  ? new Date(post.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-                  : new Date(post.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }))
-              : (post as any).date
-            const postReadTime = isDbPost ? '5 min read' : (post as any).readTime
-            const isTrending = isDbPost ? index === 0 : (post as any).trending
+  //       {/* Featured Content Grid */}
+  //       <div className="grid md:grid-cols-3 gap-6 mb-8">
+  //         {displayContent.map((post, index) => {
+  //           // Handle both IBlogPost and featured content types
+  //           const isDbPost = '_id' in post
+  //           const postId = isDbPost ? post._id : (post as any).id
+  //           const postImage = isDbPost ? post.featuredImage : (post as any).image
+  //           const postCategory = isDbPost ? (post.categories?.[0] || 'Tech') : (post as any).category
+  //           const postDate = isDbPost 
+  //             ? (post.publishedAt 
+  //                 ? new Date(post.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+  //                 : new Date(post.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }))
+  //             : (post as any).date
+  //           const postReadTime = isDbPost ? '5 min read' : (post as any).readTime
+  //           const isTrending = isDbPost ? index === 0 : (post as any).trending
 
-            return (
-              <Link key={postId} href={`/blog/${post.slug}`}>
-                <div className="group bg-card rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer border border-border/50">
-                  {/* Image Container */}
-                  <div className="relative h-48 overflow-hidden">
-                    <img
-                      src={postImage || "/placeholder.svg"}
-                      alt={post.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
+  //           return (
+  //             <Link key={postId} href={`/blog/${post.slug}`}>
+  //               <div className="group bg-card rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer border border-border/50">
+  //                 {/* Image Container */}
+  //                 <div className="relative h-48 overflow-hidden">
+  //                   <img
+  //                     src={postImage || "/placeholder.svg"}
+  //                     alt={post.title}
+  //                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+  //                   />
                     
-                    {/* Trending Badge */}
-                    {isTrending && (
-                      <div className="absolute top-3 left-3 bg-red-500 text-white px-2 py-1 rounded-md text-xs font-semibold">
-                        TRENDING
-                      </div>
-                    )}
+  //                   {/* Trending Badge */}
+  //                   {isTrending && (
+  //                     <div className="absolute top-3 left-3 bg-red-500 text-white px-2 py-1 rounded-md text-xs font-semibold">
+  //                       TRENDING
+  //                     </div>
+  //                   )}
                     
-                    {/* Category Badge */}
-                    <div className="absolute top-3 right-3 bg-black/70 text-white px-2 py-1 rounded-md text-xs flex items-center gap-1">
-                      {getCategoryIcon(postCategory)}
-                      {postCategory}
-                    </div>
-                  </div>
+  //                   {/* Category Badge */}
+  //                   <div className="absolute top-3 right-3 bg-black/70 text-white px-2 py-1 rounded-md text-xs flex items-center gap-1">
+  //                     {getCategoryIcon(postCategory)}
+  //                     {postCategory}
+  //                   </div>
+  //                 </div>
 
-                  {/* Content */}
-                  <div className="p-4">
-                    {/* Meta Info */}
-                    <div className="flex items-center gap-3 text-xs text-muted-foreground mb-2">
-                      <div className="flex items-center gap-1">
-                        <Calendar className="w-3 h-3" />
-                        {postDate}
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Clock className="w-3 h-3" />
-                        {postReadTime}
-                      </div>
-                    </div>
+  //                 {/* Content */}
+  //                 <div className="p-4">
+  //                   {/* Meta Info */}
+  //                   <div className="flex items-center gap-3 text-xs text-muted-foreground mb-2">
+  //                     <div className="flex items-center gap-1">
+  //                       <Calendar className="w-3 h-3" />
+  //                       {postDate}
+  //                     </div>
+  //                     <div className="flex items-center gap-1">
+  //                       <Clock className="w-3 h-3" />
+  //                       {postReadTime}
+  //                     </div>
+  //                   </div>
 
-                    {/* Title */}
-                    <h3 className="text-lg font-semibold text-card-foreground mb-2 line-clamp-2 group-hover:text-primary transition-colors">
-                      {post.title}
-                    </h3>
+  //                   {/* Title */}
+  //                   <h3 className="text-lg font-semibold text-card-foreground mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+  //                     {post.title}
+  //                   </h3>
 
-                    {/* Excerpt */}
-                    <p className="text-sm text-muted-foreground line-clamp-2">
-                      {post.excerpt}
-                    </p>
-                  </div>
-                </div>
-              </Link>
-            )
-          })}
-        </div>
+  //                   {/* Excerpt */}
+  //                   <p className="text-sm text-muted-foreground line-clamp-2">
+  //                     {post.excerpt}
+  //                   </p>
+  //                 </div>
+  //               </div>
+  //             </Link>
+  //           )
+  //         })}
+  //       </div>
 
-        {/* Simple Call to Action */}
-        <div className="text-center">
-          <Link href="/blog">
-            <button className="bg-primary hover:bg-primary/90 text-white px-6 py-2 rounded-lg font-medium transition-colors">
-              Read More Articles
-            </button>
-          </Link>
-        </div>
-      </div>
-    </section>
-  )
+  //       {/* Simple Call to Action */}
+  //       <div className="text-center">
+  //         <Link href="/blog">
+  //           <button className="bg-primary hover:bg-primary/90 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+  //             Read More Articles
+  //           </button>
+  //         </Link>
+  //       </div>
+  //     </div>
+  //   </section>
+  // )
 }

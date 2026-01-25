@@ -17,7 +17,8 @@ import {
   XCircle,
   MoreHorizontal,
   Download,
-  RefreshCw
+  RefreshCw,
+  MessageCircle
 } from 'lucide-react'
 import Link from 'next/link'
 import { format } from 'date-fns'
@@ -43,6 +44,8 @@ interface Order {
     county: string
     area: string
   }
+  adminNotes?: string
+  customerNotes?: string
   createdAt: string
   updatedAt: string
 }
@@ -142,6 +145,14 @@ export default function AdminOrdersPage() {
       <Badge variant={variants[status as keyof typeof variants] || 'secondary'}>
         {status.charAt(0).toUpperCase() + status.slice(1)}
       </Badge>
+    )
+  }
+
+  const isWhatsAppOrder = (order: Order) => {
+    return (
+      order.customerEmail === 'whatsapp@electromatt.co.ke' ||
+      order.adminNotes?.includes('WhatsApp Order') ||
+      order.customerNotes?.includes('Order placed via WhatsApp')
     )
   }
 
@@ -348,11 +359,21 @@ export default function AdminOrdersPage() {
                   {orders.map((order) => (
                     <tr key={order._id} className="border-b hover:bg-muted/50">
                       <td className="p-4">
-                        <div>
-                          <p className="font-medium">{order.orderNumber}</p>
-                          <p className="text-sm text-muted-foreground">
-                            {order.paymentMethod.replace('_', ' ').toUpperCase()}
-                          </p>
+                        <div className="flex items-center gap-2">
+                          <div>
+                            <p className="font-medium">{order.orderNumber}</p>
+                            <div className="flex items-center gap-2">
+                              <p className="text-sm text-muted-foreground">
+                                {order.paymentMethod.replace('_', ' ').toUpperCase()}
+                              </p>
+                              {isWhatsAppOrder(order) && (
+                                <Badge variant="outline" className="text-green-600 border-green-600">
+                                  <MessageCircle className="w-3 h-3 mr-1" />
+                                  WhatsApp
+                                </Badge>
+                              )}
+                            </div>
+                          </div>
                         </div>
                       </td>
                       <td className="p-4">

@@ -5,7 +5,7 @@ import { X, Star, ShoppingCart, Heart, Plus, Minus, Check, Truck, Shield, Rotate
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { useCartStore } from '@/lib/cart-store'
-import { toast } from 'sonner'
+import { useToast } from '@/components/ui/custom-toast'
 
 interface Product {
   _id: string
@@ -46,6 +46,7 @@ export default function QuickViewModal({ isOpen, onClose, productId }: QuickView
   const [isFavorite, setIsFavorite] = useState(false)
   
   const { addItem } = useCartStore()
+  const toast = useToast()
 
   useEffect(() => {
     if (isOpen && productId) {
@@ -100,16 +101,7 @@ export default function QuickViewModal({ isOpen, onClose, productId }: QuickView
       })
       
       setJustAdded(true)
-      toast.success(`${product.name} added to cart!`, {
-        description: `Quantity: ${quantity}`,
-        action: {
-          label: 'View Cart',
-          onClick: () => {
-            onClose()
-            window.location.href = '/cart'
-          }
-        }
-      })
+      toast.success(`${product.name} added to cart!`, `Quantity: ${quantity}`)
       
       setTimeout(() => setJustAdded(false), 2000)
       

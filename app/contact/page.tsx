@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import Breadcrumb from '@/components/breadcrumb'
 import Header from '@/components/header'
 import Footer from '@/components/footer'
+import { useToast } from '@/components/ui/custom-toast'
 import Link from 'next/link'
 import { openWhatsAppChat } from '@/lib/whatsapp-service'
 
@@ -16,6 +17,7 @@ export default function ContactPage() {
     subject: '',
     message: '',
   })
+  const toast = useToast()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -25,7 +27,7 @@ export default function ContactPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     console.log('Form submitted:', formData)
-    alert('Thank you for your message! We will get back to you soon.')
+    toast.success('Thank you for your message! We will get back to you soon.')
     setFormData({ name: '', email: '', subject: '', message: '' })
   }
 
@@ -37,7 +39,7 @@ I am interested in getting in touch with your store. Please let me know how I ca
 Thank you!`
     
     const encodedMessage = encodeURIComponent(message)
-    const whatsappLink = `https://wa.me/254702113628?text=${encodedMessage}`
+    const whatsappLink = `https://wa.me/254713065412?text=${encodedMessage}`
     window.open(whatsappLink, '_blank')
   }
 
@@ -45,15 +47,15 @@ Thank you!`
     {
       icon: Phone,
       title: 'Call Us',
-      details: '+254 702 113 628',
-      link: 'tel:+254702113628',
+      details: '+254 713 065 412',
+      link: 'tel:+254713065412',
       color: 'text-blue-600'
     },
     {
       icon: MessageCircle,
       title: 'WhatsApp',
-      details: '+254 702 113 628',
-      link: 'https://wa.me/254702113628',
+      details: '+254 713 065 412',
+      link: 'https://wa.me/254713065412',
       color: 'text-green-600'
     },
     {
