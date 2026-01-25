@@ -9,7 +9,7 @@ This project focuses on clean UI, performance, and scalability, making it suitab
 
 ## Deployment
 
-This project is live at:
+Live Website
 
 **https://www.electromatt.co.ke/**
 
@@ -27,3 +27,14 @@ Contact and inquiry functionality
 SEO-friendly structure
 
 Fast loading and optimized assets
+
+
+## Tech Stack
+
+Language: TypeScript
+
+Styling: Tailwind CSS
+
+Frontend Framework / Library: (  Next.js,  TypeScript + HTML)
+
+Version Control: Git & GitHub
