@@ -106,23 +106,25 @@ export default function Header() {
         {/* Main Header */}
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-            <div className="relative">
+          <Link href="/" className="flex items-center gap-3 flex-shrink-0 min-w-0">
+            <div className="relative min-w-max">
               <img 
-                src="/electromatt-logo.svg" 
+                src="/electromatt-logo-compact.svg" 
                 alt="Electromatt Logo" 
-                className="w-7 h-7 lg:w-8 lg:h-8"
+                className="h-8 w-auto lg:h-10 transition-transform duration-200 hover:scale-105 max-w-none"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
                   target.style.display = 'none';
                   target.nextElementSibling?.classList.remove('hidden');
                 }}
               />
-              <Zap className="w-7 h-7 lg:w-8 lg:h-8 text-primary hidden" />
+              <div className="hidden flex items-center gap-2">
+                <Zap className="w-8 h-8 lg:w-10 lg:h-10 text-primary" />
+                <h1 className="text-lg lg:text-3xl font-black text-primary uppercase tracking-wide">
+                  ELECTROMATT
+                </h1>
+              </div>
             </div>
-            <h1 className="text-lg lg:text-2xl font-black text-primary uppercase tracking-wide">
-              ELECTROMATT
-            </h1>
           </Link>
 
           {/* Desktop Navigation */}

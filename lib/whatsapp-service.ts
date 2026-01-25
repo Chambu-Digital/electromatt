@@ -186,5 +186,5 @@ export const BUSINESS_PROFILE = {
   email: 'info@electromatt.co.ke',
   website: 'https://electromatt.co.ke',
   businessHours: 'Mon-Fri: 8AM-6PM, Sat: 9AM-5PM, Sun: 10AM-4PM',
-  logo: '/electromatt-logo.svg'
+  logo: '/electromatt-icon-only.svg'
 }

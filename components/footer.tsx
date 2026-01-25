@@ -1,6 +1,6 @@
 'use client'
 
-import { Mail, Phone, MapPin, Clock, MessageCircle } from 'lucide-react'
+import { Mail, Phone, MapPin, Clock, MessageCircle, Zap } from 'lucide-react'
 import Link from 'next/link'
 
 export default function Footer() {
@@ -13,10 +13,18 @@ export default function Footer() {
           <div className="md:col-span-1 space-y-6">
             <div className="flex items-center gap-3 mb-4">
               <img 
-                src="/electromatt-logo.svg" 
+                src="/electromatt-icon-only.svg" 
                 alt="Electromatt Logo" 
-                className="w-8 h-8"
+                className="w-10 h-10 transition-transform duration-200 hover:scale-105"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                  target.nextElementSibling?.classList.remove('hidden');
+                }}
               />
+              <div className="hidden">
+                <Zap className="w-10 h-10 text-primary" />
+              </div>
               <h2 className="text-xl font-black uppercase tracking-wide">ELECTROMATT</h2>
             </div>
             <p className="text-base opacity-90 leading-relaxed max-w-sm">
