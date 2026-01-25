@@ -1,9 +1,5 @@
 # Electromatt website
 
-*Automatically synced with your [v0.app](https://v0.app) deployments*
-
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/chambudigital-8594s-projects/v0-serenleaf-natural-website)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/dkAg2muy4BC)
 
 ## Overview
 
@@ -13,17 +9,12 @@ This project focuses on clean UI, performance, and scalability, making it suitab
 
 ## Deployment
 
-Your project is live at:
+This project is live at:
 
 **https://www.electromatt.co.ke/**
 
-## Build your app
 
-Continue building your app on:
-
-**[https://v0.app/chat/dkAg2muy4BC](https://v0.app/chat/dkAg2muy4BC)**
-
-## features
+## Features
 
 Responsive and mobile-friendly design
 
