@@ -9,16 +9,14 @@ import {
   DollarSign,
   Star,
   FileText,
-  TrendingUp,
   AlertTriangle,
-  CheckCircle,
   Clock,
   Activity
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import PermissionGuard, { PermissionCheck } from '@/components/admin/permission-guard'
 import { PERMISSIONS } from '@/lib/permissions'
+import { useUserStore } from '@/lib/user-store'
 
 interface DashboardStats {
   products: {
@@ -27,12 +25,12 @@ interface DashboardStats {
     outOfStock: number
     categories: number
   }
-  customers: {
-    total: number
-    active: number
-    newThisMonth: number
-    recentWeek: number
-  }
+  // customers: {
+  //   total: number
+  //   active: number
+  //   newThisMonth: number
+  //   recentWeek: number
+  // }
   orders: {
     total: number
     pending: number
@@ -46,41 +44,59 @@ interface DashboardStats {
     thisMonth: number
     averageOrderValue: number
   }
-  reviews: {
-    total: number
-    pending: number
-    approved: number
-    recentWeek: number
-  }
-  blog: {
-    total: number
-    published: number
-    draft: number
-  }
+  // reviews: {
+  //   total: number
+  //   pending: number
+  //   approved: number
+  //   recentWeek: number
+  // }
+  // blog: {
+  //   total: number
+  //   published: number
+  //   draft: number
+  // }
   activity: {
     ordersThisWeek: number
-    customersThisWeek: number
-    reviewsThisWeek: number
+    // customersThisWeek: number
+    // reviewsThisWeek: number
   }
 }
 
 export default function AdminDashboard() {
+  const { user, isLoaded } = useUserStore()
   const [stats, setStats] = useState<DashboardStats | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
   useEffect(() => {
-    fetchStats()
-  }, [])
+    // Only fetch stats when user is loaded and is an admin
+    if (isLoaded && user && ['admin', 'super_admin'].includes(user.role)) {
+      fetchStats()
+    } else if (isLoaded && (!user || !['admin', 'super_admin'].includes(user.role))) {
+      setLoading(false)
+      setError('Access denied')
+    }
+  }, [user, isLoaded])
 
   const fetchStats = async () => {
     try {
       setLoading(true)
-      const response = await fetch('/api/admin/dashboard/stats')
+      setError('')
+      
+      const response = await fetch('/api/admin/dashboard/stats', {
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      })
       
       if (response.ok) {
         const data = await response.json()
         setStats(data)
+      } else if (response.status === 401) {
+        setError('Authentication required')
+      } else if (response.status === 403) {
+        setError('Access denied')
       } else {
         setError('Failed to load dashboard statistics')
       }
@@ -211,6 +227,7 @@ export default function AdminDashboard() {
             </Card>
           </PermissionCheck>
 
+          {/* COMMENTED OUT - Not using customers
           <PermissionCheck permissions={[PERMISSIONS.CUSTOMERS_VIEW]}>
             <Card>
               <CardContent className="p-6">
@@ -231,6 +248,7 @@ export default function AdminDashboard() {
               </CardContent>
             </Card>
           </PermissionCheck>
+          */}
 
           <PermissionCheck permissions={[PERMISSIONS.REPORTS_VIEW]}>
             <Card>
@@ -271,6 +289,7 @@ export default function AdminDashboard() {
             </Card>
           </PermissionCheck>
 
+          {/* COMMENTED OUT - Not using reviews
           <PermissionCheck permissions={[PERMISSIONS.REVIEWS_VIEW]}>
             <Card>
               <CardHeader className="pb-3">
@@ -287,7 +306,9 @@ export default function AdminDashboard() {
               </CardContent>
             </Card>
           </PermissionCheck>
+          */}
 
+          {/* COMMENTED OUT - Not using blog
           <PermissionCheck permissions={[PERMISSIONS.BLOG_VIEW]}>
             <Card>
               <CardHeader className="pb-3">
@@ -304,6 +325,7 @@ export default function AdminDashboard() {
               </CardContent>
             </Card>
           </PermissionCheck>
+          */}
         </div>
 
         {/* Recent Activity */}
@@ -329,6 +351,7 @@ export default function AdminDashboard() {
                 </div>
               </PermissionCheck>
 
+              {/* COMMENTED OUT - Not using customers
               <PermissionCheck permissions={[PERMISSIONS.CUSTOMERS_VIEW]}>
                 <div className="flex items-center p-4 bg-muted/50 rounded-lg">
                   <Users className="w-8 h-8 text-purple-600 mr-3" />
@@ -338,7 +361,9 @@ export default function AdminDashboard() {
                   </div>
                 </div>
               </PermissionCheck>
+              */}
 
+              {/* COMMENTED OUT - Not using reviews
               <PermissionCheck permissions={[PERMISSIONS.REVIEWS_VIEW]}>
                 <div className="flex items-center p-4 bg-muted/50 rounded-lg">
                   <Star className="w-8 h-8 text-yellow-600 mr-3" />
@@ -348,6 +373,7 @@ export default function AdminDashboard() {
                   </div>
                 </div>
               </PermissionCheck>
+              */}
             </div>
           </CardContent>
         </Card>
