@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { ShoppingCart, User, Search, Menu, Zap, X, ChevronDown, Phone, MapPin } from 'lucide-react'
+import { ShoppingCart, User, Search, Menu, Zap, X, ChevronDown, Phone } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { ICategory } from '@/models/Category'
@@ -45,6 +45,7 @@ export default function Header() {
     e.preventDefault()
     if (searchQuery.trim()) {
       setShowSearchResults(false)
+      setIsSearchOpen(false)
       window.location.href = `/search?q=${encodeURIComponent(searchQuery.trim())}`
     }
   }
@@ -76,74 +77,70 @@ export default function Header() {
   const selectSearchResult = (product: any) => {
     setShowSearchResults(false)
     setSearchQuery('')
+    setIsSearchOpen(false)
     window.location.href = `/product/${product._id}`
   }
 
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false)
+  }
+
   return (
-    <header className="sticky top-0 z-50 bg-background border-b border-border shadow-sm">
+    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border shadow-sm">
       {/* Contact Bar */}
-      <div className="bg-muted/50 border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 py-2">
-          <div className="flex items-center justify-center md:justify-between text-sm text-muted-foreground">
-            <div className="hidden md:flex items-center gap-6">
-              <a href="tel:+254713065412" className="flex items-center gap-2 hover:text-primary transition-colors">
-                <Phone className="w-4 h-4" />
-                +254 713 065 412
-
-              </a>
-              {/* <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4" />
-                Agro House, Moi Avenue, 1st Floor Rm 35
-              </div> */}
-            </div>
-            {/* Mobile - show only phone */}
-            <div className="md:hidden">
-              <a href="tel:+254713065412" className="flex items-center gap-2 hover:text-primary transition-colors">
-                <Phone className="w-4 h-4" />
-               +254 713 065 412
-
-              </a>
-            </div>
+      <div className="bg-primary/5 border-b border-border/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-center py-2">
+            <a 
+              href="tel:+254713065412" 
+              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
+            >
+              <Phone className="w-4 h-4" />
+              <span className="font-medium">+254 713 065 412</span>
+            </a>
           </div>
         </div>
       </div>
       
-      <div className="max-w-7xl mx-auto px-4">
-        {/* Desktop Header */}
-        <div className="hidden md:flex items-center justify-between h-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Main Header */}
+        <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <img 
-              src="/electromatt-logo.svg" 
-              alt="Electromatt Logo" 
-              className="w-8 h-8"
-              onError={(e) => {
-                // Fallback to Zap icon if image fails to load
-                const target = e.target as HTMLImageElement;
-                target.style.display = 'none';
-                target.nextElementSibling?.classList.remove('hidden');
-              }}
-            />
-            <Zap className="w-8 h-8 text-primary hidden" />
-            <h1 className="text-2xl font-black text-primary uppercase tracking-wide">ELECTROMATT</h1>
+          <Link href="/" className="flex items-center gap-2 flex-shrink-0">
+            <div className="relative">
+              <img 
+                src="/electromatt-logo.svg" 
+                alt="Electromatt Logo" 
+                className="w-7 h-7 lg:w-8 lg:h-8"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                  target.nextElementSibling?.classList.remove('hidden');
+                }}
+              />
+              <Zap className="w-7 h-7 lg:w-8 lg:h-8 text-primary hidden" />
+            </div>
+            <h1 className="text-lg lg:text-2xl font-black text-primary uppercase tracking-wide">
+              ELECTROMATT
+            </h1>
           </Link>
 
-          {/* Navigation Links */}
-          <div className="flex items-center gap-6">
+          {/* Desktop Navigation */}
+          <nav className="hidden lg:flex items-center gap-8">
             <div className="relative">
               <Button
                 variant="ghost"
-                className="flex items-center gap-1"
+                className="flex items-center gap-1 text-sm font-medium"
                 onMouseEnter={() => setShowCategories(true)}
                 onMouseLeave={() => setShowCategories(false)}
               >
                 Categories
-                <ChevronDown className="w-4 h-4" />
+                <ChevronDown className="w-4 h-4 transition-transform duration-200" />
               </Button>
             
               {showCategories && (
                 <div
-                  className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg py-2 min-w-48 z-50"
+                  className="absolute top-full left-0 mt-2 bg-background border border-border rounded-lg shadow-lg py-2 min-w-48 z-50"
                   onMouseEnter={() => setShowCategories(true)}
                   onMouseLeave={() => setShowCategories(false)}
                 >
@@ -151,7 +148,7 @@ export default function Header() {
                     <Link
                       key={category._id}
                       href={`/category/${category.slug}`}
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                      className="block px-4 py-2 text-sm text-foreground hover:bg-muted transition-colors duration-200"
                     >
                       {category.name}
                     </Link>
@@ -161,39 +158,41 @@ export default function Header() {
             </div>
             
             {/* <Link href="/products">
-              <Button variant="ghost">
+              <Button variant="ghost" className="text-sm font-medium">
                 Products
               </Button>
             </Link> */}
             
             {/* <Link href="/blog">
-              <Button variant="ghost">
+              <Button variant="ghost" className="text-sm font-medium">
                 Blog
               </Button>
             </Link> */}
-          </div>
+          </nav>
 
-          {/* Search Bar */}
-          <div className="flex-1 mx-8 relative">
-            <form onSubmit={handleSearch} className="flex items-center bg-muted rounded-full px-4 py-2">
-              <Search className="w-5 h-5 text-muted-foreground" />
-              <input
-                type="text"
-                placeholder="Search electronics..."
-                value={searchQuery}
-                onChange={(e) => handleSearchChange(e.target.value)}
-                onFocus={() => searchResults.length > 0 && setShowSearchResults(true)}
-                onBlur={() => setTimeout(() => setShowSearchResults(false), 200)}
-                className="flex-1 bg-transparent ml-3 outline-none text-foreground placeholder:text-muted-foreground"
-              />
-              {searchLoading && (
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
-              )}
+          {/* Desktop Search Bar */}
+          <div className="hidden md:flex flex-1 max-w-md mx-8 relative">
+            <form onSubmit={handleSearch} className="w-full">
+              <div className="relative flex items-center bg-muted/50 border border-border rounded-full px-4 py-2.5 focus-within:border-primary/50 focus-within:bg-background transition-all duration-200">
+                <Search className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                <input
+                  type="text"
+                  placeholder="Search electronics..."
+                  value={searchQuery}
+                  onChange={(e) => handleSearchChange(e.target.value)}
+                  onFocus={() => searchResults.length > 0 && setShowSearchResults(true)}
+                  onBlur={() => setTimeout(() => setShowSearchResults(false), 200)}
+                  className="flex-1 bg-transparent ml-3 outline-none text-sm text-foreground placeholder:text-muted-foreground"
+                />
+                {searchLoading && (
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary flex-shrink-0"></div>
+                )}
+              </div>
             </form>
 
-            {/* Live Search Results */}
+            {/* Desktop Search Results */}
             {showSearchResults && searchResults.length > 0 && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg py-2 z-50 max-h-96 overflow-y-auto">
+              <div className="absolute top-full left-0 right-0 mt-2 bg-background border border-border rounded-lg shadow-lg py-2 z-50 max-h-96 overflow-y-auto">
                 {searchResults.map((product) => {
                   const displayImage = getProductDisplayImage(product)
                   const { price } = getProductDisplayPrice(product)
@@ -202,27 +201,27 @@ export default function Header() {
                     <div
                       key={product._id}
                       onClick={() => selectSearchResult(product)}
-                      className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 cursor-pointer"
+                      className="flex items-center gap-3 px-4 py-3 hover:bg-muted cursor-pointer transition-colors duration-200"
                     >
                       <img
                         src={displayImage}
                         alt={product.name}
-                        className="w-10 h-10 object-cover rounded"
+                        className="w-10 h-10 object-cover rounded-md flex-shrink-0"
                       />
-                      <div className="flex-1">
-                        <p className="font-medium text-sm text-gray-900 line-clamp-1">{product.name}</p>
-                        <p className="text-xs text-gray-500">{product.category}</p>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-sm text-foreground truncate">{product.name}</p>
+                        <p className="text-xs text-muted-foreground">{product.category}</p>
                       </div>
-                      <p className="text-sm font-bold text-primary">KSH {price}</p>
+                      <p className="text-sm font-bold text-primary flex-shrink-0">KSH {price.toLocaleString()}</p>
                     </div>
                   )
                 })}
                 
                 {searchQuery.trim() && (
-                  <div className="border-t border-gray-100 mt-2 pt-2">
+                  <div className="border-t border-border mt-2 pt-2">
                     <button
                       onClick={() => handleSearch({ preventDefault: () => {} } as any)}
-                      className="w-full text-left px-4 py-2 text-sm text-blue-600 hover:bg-gray-50"
+                      className="w-full text-left px-4 py-2 text-sm text-primary hover:bg-muted transition-colors duration-200"
                     >
                       View all results for "{searchQuery}"
                     </button>
@@ -232,63 +231,53 @@ export default function Header() {
             )}
           </div>
 
-          {/* Right Icons */}
-          <div className="flex items-center gap-6">
-            {user ? (
-              <Link href="/account">
-                <Button variant="ghost" size="icon" className="relative">
-                  <User className="w-6 h-6" />
-                  <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full w-2 h-2"></span>
-                </Button>
-              </Link>
-            ) : (
-              <Link href="/account/login">
-                <Button variant="ghost" size="icon">
-                  <User className="w-6 h-6" />
-                </Button>
-              </Link>
-            )}
-            <CartSidebar>
-              <Button variant="ghost" size="icon" className="relative">
-                <ShoppingCart className="w-6 h-6" />
-                {isLoaded && getTotalItems() > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-secondary text-secondary-foreground text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                    {getTotalItems()}
-                  </span>
-                )}
-              </Button>
-            </CartSidebar>
-          </div>
-        </div>
-
-        {/* Mobile Header */}
-        <div className="md:hidden flex items-center justify-between h-16">
-          <Link href="/" className="flex items-center gap-2">
-            <Zap className="w-6 h-6 text-primary" />
-            <h1 className="text-lg font-black text-primary uppercase tracking-wide">ELECTROMATT</h1>
-          </Link>
-
-          <div className="flex items-center gap-2">
+          {/* Right Actions */}
+          <div className="flex items-center gap-2 lg:gap-4">
+            {/* Mobile Search Toggle */}
             <Button 
               variant="ghost" 
               size="icon"
+              className="md:hidden"
               onClick={() => setIsSearchOpen(!isSearchOpen)}
             >
               <Search className="w-5 h-5" />
             </Button>
+
+            {/* User Account */}
+            <div className="hidden sm:block">
+              {user ? (
+                <Link href="/account">
+                  <Button variant="ghost" size="icon" className="relative">
+                    <User className="w-5 h-5" />
+                    <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full w-2 h-2"></span>
+                  </Button>
+                </Link>
+              ) : (
+                <Link href="/account/login">
+                  <Button variant="ghost" size="icon">
+                    <User className="w-5 h-5" />
+                  </Button>
+                </Link>
+              )}
+            </div>
+
+            {/* Cart */}
             <CartSidebar>
               <Button variant="ghost" size="icon" className="relative">
                 <ShoppingCart className="w-5 h-5" />
                 {isLoaded && getTotalItems() > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-secondary text-secondary-foreground text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                  <span className="absolute -top-2 -right-2 bg-secondary text-secondary-foreground text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center min-w-[20px] h-5">
                     {getTotalItems()}
                   </span>
                 )}
               </Button>
             </CartSidebar>
+
+            {/* Mobile Menu Toggle */}
             <Button
               variant="ghost"
               size="icon"
+              className="lg:hidden"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
               {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -298,97 +287,124 @@ export default function Header() {
 
         {/* Mobile Search */}
         {isSearchOpen && (
-          <div className="md:hidden px-4 pb-4 border-t border-border">
-            <div className="relative mt-4">
-              <form onSubmit={handleSearch} className="flex items-center bg-muted rounded-full px-4 py-2">
-                <Search className="w-4 h-4 text-muted-foreground" />
-                <input
-                  type="text"
-                  placeholder="Search electronics..."
-                  value={searchQuery}
-                  onChange={(e) => handleSearchChange(e.target.value)}
-                  className="flex-1 bg-transparent ml-3 outline-none text-foreground placeholder:text-muted-foreground text-sm"
-                />
-                {searchLoading && (
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
+          <div className="md:hidden border-t border-border">
+            <div className="py-4">
+              <form onSubmit={handleSearch} className="relative">
+                <div className="flex items-center bg-muted/50 border border-border rounded-full px-4 py-2.5 focus-within:border-primary/50 focus-within:bg-background transition-all duration-200">
+                  <Search className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                  <input
+                    type="text"
+                    placeholder="Search electronics..."
+                    value={searchQuery}
+                    onChange={(e) => handleSearchChange(e.target.value)}
+                    onFocus={() => searchResults.length > 0 && setShowSearchResults(true)}
+                    onBlur={() => setTimeout(() => setShowSearchResults(false), 200)}
+                    className="flex-1 bg-transparent ml-3 outline-none text-sm text-foreground placeholder:text-muted-foreground"
+                    autoFocus
+                  />
+                  {searchLoading && (
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary flex-shrink-0"></div>
+                  )}
+                </div>
+
+                {/* Mobile Search Results */}
+                {showSearchResults && searchResults.length > 0 && (
+                  <div className="absolute top-full left-0 right-0 mt-2 bg-background border border-border rounded-lg shadow-lg py-2 z-50 max-h-64 overflow-y-auto">
+                    {searchResults.map((product) => {
+                      const displayImage = getProductDisplayImage(product)
+                      const { price } = getProductDisplayPrice(product)
+                      
+                      return (
+                        <div
+                          key={product._id}
+                          onClick={() => selectSearchResult(product)}
+                          className="flex items-center gap-3 px-4 py-3 hover:bg-muted cursor-pointer transition-colors duration-200"
+                        >
+                          <img
+                            src={displayImage}
+                            alt={product.name}
+                            className="w-8 h-8 object-cover rounded flex-shrink-0"
+                          />
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-sm text-foreground truncate">{product.name}</p>
+                            <p className="text-xs text-muted-foreground">{product.category}</p>
+                          </div>
+                          <p className="text-sm font-bold text-primary flex-shrink-0">KSH {price.toLocaleString()}</p>
+                        </div>
+                      )
+                    })}
+                    
+                    {searchQuery.trim() && (
+                      <div className="border-t border-border mt-2 pt-2">
+                        <button
+                          onClick={() => handleSearch({ preventDefault: () => {} } as any)}
+                          className="w-full text-left px-4 py-2 text-sm text-primary hover:bg-muted transition-colors duration-200"
+                        >
+                          View all results for "{searchQuery}"
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 )}
               </form>
-
-              {/* Mobile Search Results */}
-              {showSearchResults && searchResults.length > 0 && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg py-2 z-50 max-h-64 overflow-y-auto">
-                  {searchResults.map((product) => {
-                    const displayImage = getProductDisplayImage(product)
-                    const { price } = getProductDisplayPrice(product)
-                    
-                    return (
-                      <div
-                        key={product._id}
-                        onClick={() => selectSearchResult(product)}
-                        className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 cursor-pointer"
-                      >
-                        <img
-                          src={displayImage}
-                          alt={product.name}
-                          className="w-8 h-8 object-cover rounded"
-                        />
-                        <div className="flex-1">
-                          <p className="font-medium text-sm text-gray-900 line-clamp-1">{product.name}</p>
-                          <p className="text-xs text-gray-500">{product.category}</p>
-                        </div>
-                        <p className="text-sm font-bold text-primary">KSH {price}</p>
-                      </div>
-                    )
-                  })}
-                </div>
-              )}
             </div>
           </div>
         )}
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden pb-4 border-t border-border">
-            <div className="flex flex-col gap-2 mt-4">
+          <div className="lg:hidden border-t border-border">
+            <div className="py-4 space-y-1">
+              {/* User Account */}
               {user ? (
-                <Link href="/account">
-                  <Button variant="ghost" className="justify-start w-full">
-                    <User className="w-4 h-4 mr-2" /> My Account
+                <Link href="/account" onClick={closeMobileMenu}>
+                  <Button variant="ghost" className="justify-start w-full h-12">
+                    <User className="w-4 h-4 mr-3" /> 
+                    My Account
                   </Button>
                 </Link>
               ) : (
-                <Link href="/account/login">
-                  <Button variant="ghost" className="justify-start w-full">
-                    <User className="w-4 h-4 mr-2" /> Sign In
+                <Link href="/account/login" onClick={closeMobileMenu}>
+                  <Button variant="ghost" className="justify-start w-full h-12">
+                    <User className="w-4 h-4 mr-3" /> 
+                    Sign In
                   </Button>
                 </Link>
               )}
               
-              <Link href="/products">
-                <Button variant="ghost" className="justify-start w-full">
+              {/* Navigation Links */}
+              <Link href="/products" onClick={closeMobileMenu}>
+                <Button variant="ghost" className="justify-start w-full h-12">
                   Products
                 </Button>
               </Link>
               
-              <Link href="/blog">
-                <Button variant="ghost" className="justify-start w-full">
+              <Link href="/blog" onClick={closeMobileMenu}>
+                <Button variant="ghost" className="justify-start w-full h-12">
                   Blog
                 </Button>
               </Link>
               
-              {/* Mobile Categories */}
-              <div className="border-t pt-2 mt-2">
-                <p className="text-sm font-semibold text-gray-600 px-4 py-2">Categories</p>
-                {categories.map((category) => (
-                  <Link
-                    key={category._id}
-                    href={`/category/${category.slug}`}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    {category.name}
-                  </Link>
-                ))}
-              </div>
+              {/* Categories */}
+              {categories.length > 0 && (
+                <div className="border-t border-border pt-4 mt-4">
+                  <p className="text-sm font-semibold text-muted-foreground px-4 py-2 uppercase tracking-wide">
+                    Categories
+                  </p>
+                  <div className="space-y-1">
+                    {categories.map((category) => (
+                      <Link
+                        key={category._id}
+                        href={`/category/${category.slug}`}
+                        onClick={closeMobileMenu}
+                        className="block px-4 py-3 text-sm text-foreground hover:bg-muted transition-colors duration-200 rounded-md mx-2"
+                      >
+                        {category.name}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}
