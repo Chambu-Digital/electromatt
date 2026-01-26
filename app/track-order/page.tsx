@@ -20,7 +20,7 @@ import {
   ShoppingBag
 } from 'lucide-react'
 import Link from 'next/link'
-import { useCustomToast } from '@/components/ui/custom-toast'
+import { useToast } from '@/components/ui/custom-toast'
 
 interface OrderItem {
   productId: string
@@ -57,7 +57,7 @@ interface Order {
 }
 
 export default function TrackOrderPage() {
-  const { showToast } = useCustomToast()
+  const { success: showSuccessToast, error: showErrorToast } = useToast()
   const [searchQuery, setSearchQuery] = useState('')
   const [searchType, setSearchType] = useState<'order' | 'email'>('order')
   const [loading, setLoading] = useState(false)
@@ -68,7 +68,7 @@ export default function TrackOrderPage() {
     e.preventDefault()
     
     if (!searchQuery.trim()) {
-      showToast('Please enter an order number or email', 'error')
+      showErrorToast('Please enter an order number or email')
       return
     }
 
@@ -87,18 +87,18 @@ export default function TrackOrderPage() {
         const data = await response.json()
         if (data.order) {
           setOrder(data.order)
-          showToast('Order found!', 'success')
+          showSuccessToast('Order found!')
         } else {
           setNotFound(true)
-          showToast('Order not found', 'error')
+          showErrorToast('Order not found')
         }
       } else {
         setNotFound(true)
-        showToast('Order not found', 'error')
+        showErrorToast('Order not found')
       }
     } catch (error) {
       console.error('Error tracking order:', error)
-      showToast('Error searching for order', 'error')
+      showErrorToast('Error searching for order')
     } finally {
       setLoading(false)
     }
