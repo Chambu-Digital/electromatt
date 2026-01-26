@@ -98,11 +98,7 @@ export default function LoginPage() {
         {/* Logo */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 text-2xl font-bold text-primary">
-<<<<<<< HEAD
             ELECTROMATT
-=======
-           Electromatt
->>>>>>> 274fde4a39a748c56ddb0df6cb6a359da6a690bd
           </Link>
           <p className="text-sm text-muted-foreground mt-2">Sign in to your account</p>
         </div>
