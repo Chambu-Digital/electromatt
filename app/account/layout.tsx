@@ -35,11 +35,11 @@ const navigationItems = [
     label: 'Orders',
     icon: Package
   },
-  {
-    href: '/account/reviews',
-    label: 'My Reviews',
-    icon: Star
-  },
+  // {
+  //   href: '/account/reviews',
+  //   label: 'My Reviews',
+  //   icon: Star
+  // },
   {
     href: '/account/profile',
     label: 'Profile & Settings',
@@ -113,8 +113,7 @@ export default function AccountLayout({
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2">
-              <Leaf className="w-6 h-6 text-primary" />
-              <span className="text-lg font-bold text-primary">Serenleaf Naturals</span>
+              <span className="text-lg font-bold text-primary">Electromatt</span>
             </Link>
 
             {/* Mobile menu button */}

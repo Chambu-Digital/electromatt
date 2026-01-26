@@ -80,8 +80,7 @@ export default function AdminLoginPage() {
         {/* Logo */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 text-2xl font-bold text-primary">
-            <Leaf className="w-8 h-8" />
-            Serenleaf Naturals
+            Electromatt
           </Link>
           <p className="text-muted-foreground mt-2">Admin Portal</p>
         </div>
@@ -112,7 +111,7 @@ export default function AdminLoginPage() {
                   <Input
                     id="email"
                     type="email"
-                    placeholder="admin@serenleaf.com"
+                    placeholder="admin@electromatt.com"
                     className="pl-10"
                     {...register('email')}
                   />

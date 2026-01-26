@@ -71,8 +71,7 @@ export default function AdminRegisterPage() {
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
             <Link href="/" className="inline-flex items-center gap-2 text-2xl font-bold text-primary">
-              <Leaf className="w-8 h-8" />
-              Serenleaf Naturals
+             Electromatt
             </Link>
             <p className="text-muted-foreground mt-2">Admin Portal</p>
           </div>
@@ -128,8 +127,7 @@ export default function AdminRegisterPage() {
         {/* Logo */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 text-2xl font-bold text-primary">
-            <Leaf className="w-8 h-8" />
-            Serenleaf Naturals
+            Electromatt
           </Link>
           <p className="text-muted-foreground mt-2">Admin Access Request</p>
         </div>

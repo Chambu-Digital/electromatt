@@ -28,10 +28,10 @@ export async function GET(request: NextRequest) {
       activeProducts,
       outOfStockProducts,
       
-      // Customer stats
-      totalCustomers,
-      activeCustomers,
-      newCustomersThisMonth,
+      // Customer stats (commented out - not using)
+      // totalCustomers,
+      // activeCustomers,
+      // newCustomersThisMonth,
       
       // Order stats
       totalOrders,
@@ -44,14 +44,14 @@ export async function GET(request: NextRequest) {
       totalRevenue,
       monthlyRevenue,
       
-      // Review stats
-      totalReviews,
-      pendingReviews,
-      approvedReviews,
+      // Review stats (commented out - not using)
+      // totalReviews,
+      // pendingReviews,
+      // approvedReviews,
       
-      // Blog stats
-      totalBlogPosts,
-      publishedBlogPosts,
+      // Blog stats (commented out - not using)
+      // totalBlogPosts,
+      // publishedBlogPosts,
       
       // Category stats (from products)
       categories
@@ -61,15 +61,15 @@ export async function GET(request: NextRequest) {
       Product.countDocuments({ inStock: true }),
       Product.countDocuments({ stockQuantity: { $lte: 0 } }),
       
-      // Customers
-      User.countDocuments({ role: 'customer' }),
-      User.countDocuments({ role: 'customer', isActive: true }),
-      User.countDocuments({ 
-        role: 'customer', 
-        createdAt: { 
-          $gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1) 
-        } 
-      }),
+      // Customers (commented out - not using)
+      // User.countDocuments({ role: 'customer' }),
+      // User.countDocuments({ role: 'customer', isActive: true }),
+      // User.countDocuments({ 
+      //   role: 'customer', 
+      //   createdAt: { 
+      //     $gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1) 
+      //   } 
+      // }),
       
       // Orders
       Order.countDocuments(),
@@ -95,14 +95,14 @@ export async function GET(request: NextRequest) {
         { $group: { _id: null, total: { $sum: '$totalAmount' } } }
       ]),
       
-      // Reviews
-      Review.countDocuments(),
-      Review.countDocuments({ status: 'pending' }),
-      Review.countDocuments({ status: 'approved' }),
+      // Reviews (commented out - not using)
+      // Review.countDocuments(),
+      // Review.countDocuments({ status: 'pending' }),
+      // Review.countDocuments({ status: 'approved' }),
       
-      // Blog
-      BlogPost.countDocuments(),
-      BlogPost.countDocuments({ published: true }),
+      // Blog (commented out - not using)
+      // BlogPost.countDocuments(),
+      // BlogPost.countDocuments({ published: true }),
       
       // Categories (distinct from products)
       Product.distinct('category')
@@ -116,10 +116,10 @@ export async function GET(request: NextRequest) {
     const sevenDaysAgo = new Date()
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
     
-    const [recentOrders, recentCustomers, recentReviews] = await Promise.all([
+    const [recentOrders] = await Promise.all([
       Order.countDocuments({ createdAt: { $gte: sevenDaysAgo } }),
-      User.countDocuments({ role: 'customer', createdAt: { $gte: sevenDaysAgo } }),
-      Review.countDocuments({ createdAt: { $gte: sevenDaysAgo } })
+      // User.countDocuments({ role: 'customer', createdAt: { $gte: sevenDaysAgo } }), // Commented out - not using customers
+      // Review.countDocuments({ createdAt: { $gte: sevenDaysAgo } }) // Commented out - not using reviews
     ])
     
     return NextResponse.json({
@@ -129,12 +129,12 @@ export async function GET(request: NextRequest) {
         outOfStock: outOfStockProducts,
         categories: categories.length
       },
-      customers: {
-        total: totalCustomers,
-        active: activeCustomers,
-        newThisMonth: newCustomersThisMonth,
-        recentWeek: recentCustomers
-      },
+      // customers: { // Commented out - not using customers
+      //   total: totalCustomers,
+      //   active: activeCustomers,
+      //   newThisMonth: newCustomersThisMonth,
+      //   recentWeek: recentCustomers
+      // },
       orders: {
         total: totalOrders,
         pending: pendingOrders,
@@ -148,27 +148,26 @@ export async function GET(request: NextRequest) {
         thisMonth: monthRevenue,
         averageOrderValue: totalOrders > 0 ? revenue / totalOrders : 0
       },
-      reviews: {
-        total: totalReviews,
-        pending: pendingReviews,
-        approved: approvedReviews,
-        recentWeek: recentReviews
-      },
-      blog: {
-        total: totalBlogPosts,
-        published: publishedBlogPosts,
-        draft: totalBlogPosts - publishedBlogPosts
-      },
+      // reviews: { // Commented out - not using reviews
+      //   total: totalReviews,
+      //   pending: pendingReviews,
+      //   approved: approvedReviews,
+      //   recentWeek: recentReviews
+      // },
+      // blog: { // Commented out - not using blog
+      //   total: totalBlogPosts,
+      //   published: publishedBlogPosts,
+      //   draft: totalBlogPosts - publishedBlogPosts
+      // },
       activity: {
         ordersThisWeek: recentOrders,
-        customersThisWeek: recentCustomers,
-        reviewsThisWeek: recentReviews
+        // customersThisWeek: recentCustomers, // Commented out - not using customers
+        // reviewsThisWeek: recentReviews // Commented out - not using reviews
       }
     })
     
   } catch (error: any) {
-    console.error('Error fetching dashboard stats:', error)
-    
+    // Don't log authentication errors as they're expected for non-admin users
     if (error.message === 'Authentication required') {
       return NextResponse.json(
         { error: 'Authentication required' },
@@ -176,6 +175,7 @@ export async function GET(request: NextRequest) {
       )
     }
     
+    console.error('Error fetching dashboard stats:', error)
     return NextResponse.json(
       { error: 'Failed to fetch dashboard statistics' },
       { status: 500 }

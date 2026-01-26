@@ -23,9 +23,9 @@ export async function GET(request: NextRequest) {
       requests: 0,
       orders: 0,
       products: 0,
-      customers: 0,
+      // customers: 0, // Commented out - not using customers
       reports: 0,
-      reviews: 0
+      // reviews: 0 // Commented out - not using reviews
     }
 
     // Admin Requests (Super Admin only)
@@ -49,21 +49,20 @@ export async function GET(request: NextRequest) {
     // For now, we'll set it to 0
     notifications.products = 0
 
-    // New Customers (last 7 days) - if you want to track this
-    notifications.customers = 0
+    // New Customers (last 7 days) - COMMENTED OUT - not using customers
+    // notifications.customers = 0
 
     // Reports that need attention - placeholder
     notifications.reports = 0
 
-    // Pending Reviews
-    const pendingReviews = await Review.countDocuments({ status: 'pending' })
-    notifications.reviews = pendingReviews
+    // Pending Reviews - COMMENTED OUT - not using reviews
+    // const pendingReviews = await Review.countDocuments({ status: 'pending' })
+    // notifications.reviews = pendingReviews
 
     return NextResponse.json({ notifications })
     
   } catch (error: any) {
-    console.error('Error fetching notifications:', error)
-    
+    // Don't log authentication errors as they're expected for non-admin users
     if (error.message === 'Authentication required') {
       return NextResponse.json(
         { error: 'Authentication required' },
@@ -71,6 +70,7 @@ export async function GET(request: NextRequest) {
       )
     }
     
+    console.error('Error fetching notifications:', error)
     return NextResponse.json(
       { error: 'Failed to fetch notifications' },
       { status: 500 }

@@ -228,18 +228,13 @@ export default function CartSidebar({ children }: CartSidebarProps) {
                 </div>
 
                 {/* WhatsApp Notice */}
-                <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                {/* <div className="bg-green-50 border border-green-200 rounded-lg p-3">
                   <p className="text-sm text-green-800 text-center">
                      Orders are processed via WhatsApp for personalized service
                   </p>
-                </div>
+                </div> */}
 
-                {/* Free Delivery Notice */}
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                  <p className="text-sm text-blue-800 text-center">
-                     Free delivery within Nairobi for orders over KSH 10,000
-                  </p>
-                </div>
+               
               </div>
             </>
           )}

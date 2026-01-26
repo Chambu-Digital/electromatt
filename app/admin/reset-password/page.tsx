@@ -90,7 +90,7 @@ export default function ResetPasswordPage() {
           <div className="text-center mb-8">
             <Link href="/" className="inline-flex items-center gap-2 text-2xl font-bold text-primary">
               <Leaf className="w-8 h-8" />
-              Serenleaf Naturals
+              Electromatt
             </Link>
             <p className="text-muted-foreground mt-2">Admin Portal</p>
           </div>
@@ -133,7 +133,7 @@ export default function ResetPasswordPage() {
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 text-2xl font-bold text-primary">
             <Leaf className="w-8 h-8" />
-            Serenleaf Naturals
+            Electromatt
           </Link>
           <p className="text-muted-foreground mt-2">Admin Portal</p>
         </div>
