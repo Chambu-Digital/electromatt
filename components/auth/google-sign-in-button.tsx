@@ -84,13 +84,16 @@ export default function GoogleSignInButton({
 
   const handleGoogleResponse = async (response: any) => {
     try {
-      console.log('Google response received:', response)
+      // Don't log the full response as it contains sensitive credential data
+      console.log('Google authentication initiated')
       const result = await loginWithGoogle(response.credential)
       
       if (result.success) {
+        console.log('Google authentication successful')
         onSuccess?.()
         router.push('/account')
       } else {
+        console.error('Google authentication failed:', result.error)
         onError?.(result.error || 'Google sign-in failed')
       }
     } catch (error) {
