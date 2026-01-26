@@ -11,8 +11,8 @@ export async function GET(request: NextRequest) {
     await connectDB()
     
     const { searchParams } = new URL(request.url)
-    const format = searchParams.get('format') || 'csv'
     const period = searchParams.get('period') || '30'
+    const format = searchParams.get('format') || 'csv'
     const startDate = searchParams.get('startDate')
     const endDate = searchParams.get('endDate')
     
@@ -35,14 +35,7 @@ export async function GET(request: NextRequest) {
     }
     
     if (format === 'csv') {
-      const csvData = await generateCSVReport(dateFilter)
-      
-      return new NextResponse(csvData, {
-        headers: {
-          'Content-Type': 'text/csv',
-          'Content-Disposition': `attachment; filename="sales-report-${new Date().toISOString().split('T')[0]}.csv"`
-        }
-      })
+      return await exportCSV(dateFilter)
     }
     
     return NextResponse.json({ error: 'Unsupported format' }, { status: 400 })
@@ -64,71 +57,57 @@ export async function GET(request: NextRequest) {
   }
 }
 
-async function generateCSVReport(dateFilter: any): Promise<string> {
-  // Get comprehensive order data
-  const orders = await Order.find(dateFilter)
-    .populate('userId', 'firstName lastName email')
-    .sort({ createdAt: -1 })
-    .lean()
-  
-  // CSV Headers
-  const headers = [
-    'Order Number',
-    'Date',
-    'Customer Name',
-    'Customer Email',
-    'Customer Phone',
-    'Status',
-    'Payment Status',
-    'Payment Method',
-    'Subtotal',
-    'Shipping Cost',
-    'Tax Amount',
-    'Discount Amount',
-    'Total Amount',
-    'Items Count',
-    'Product Names',
-    'Shipping County',
-    'Shipping Area',
-    'Tracking Number',
-    'Shipped Date',
-    'Delivered Date'
-  ]
-  
-  // Convert orders to CSV rows
-  const rows = orders.map(order => {
-    const customer = order.userId as any
-    const productNames = order.items.map(item => item.productName).join('; ')
+async function exportCSV(dateFilter: any) {
+  try {
+    // Get orders data for export
+    const orders = await Order.find(dateFilter)
+      .populate('userId', 'firstName lastName email')
+      .sort({ createdAt: -1 })
+      .limit(1000) // Limit to prevent memory issues
     
-    return [
-      order.orderNumber,
-      new Date(order.createdAt).toISOString().split('T')[0],
-      customer ? `${customer.firstName} ${customer.lastName}` : 'N/A',
-      order.customerEmail,
-      order.customerPhone || 'N/A',
-      order.status,
-      order.paymentStatus,
-      order.paymentMethod,
-      order.subtotal,
-      order.shippingCost,
-      order.taxAmount,
-      order.discountAmount,
-      order.totalAmount,
-      order.items.length,
-      `"${productNames}"`,
-      order.shippingAddress.county,
-      order.shippingAddress.area,
-      order.trackingNumber || 'N/A',
-      order.shippedAt ? new Date(order.shippedAt).toISOString().split('T')[0] : 'N/A',
-      order.deliveredAt ? new Date(order.deliveredAt).toISOString().split('T')[0] : 'N/A'
+    // Create CSV headers
+    const headers = [
+      'Order ID',
+      'Date',
+      'Customer Email',
+      'Customer Name',
+      'Status',
+      'Payment Method',
+      'Total Amount',
+      'Items Count',
+      'County',
+      'Area'
     ]
-  })
-  
-  // Combine headers and rows
-  const csvContent = [
-    headers.join(','),
-    ...rows.map(row => row.join(','))
-  ].join('\n')
-  
-  return csvContent
+    
+    // Create CSV rows
+    const rows = orders.map(order => [
+      order._id.toString(),
+      order.createdAt.toISOString().split('T')[0],
+      order.customerEmail || 'N/A',
+      order.customerName || 'N/A',
+      order.status,
+      order.paymentMethod || 'N/A',
+      order.totalAmount.toString(),
+      order.items.length.toString(),
+      order.shippingAddress?.county || 'N/A',
+      order.shippingAddress?.area || 'N/A'
+    ])
+    
+    // Combine headers and rows
+    const csvContent = [headers, ...rows]
+      .map(row => row.map(field => `"${field}"`).join(','))
+      .join('\n')
+    
+    // Return CSV response
+    return new NextResponse(csvContent, {
+      headers: {
+        'Content-Type': 'text/csv',
+        'Content-Disposition': `attachment; filename="electromatt-orders-${new Date().toISOString().split('T')[0]}.csv"`
+      }
+    })
+    
+  } catch (error) {
+    console.error('Error generating CSV:', error)
+    throw error
+  }
 }

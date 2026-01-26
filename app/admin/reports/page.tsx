@@ -10,26 +10,116 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { 
   TrendingUp, 
-  TrendingDown, 
   DollarSign, 
   ShoppingCart, 
   Users, 
-  Package,
   MapPin,
-  Star,
-  Calendar,
   Download,
   RefreshCw
 } from 'lucide-react'
 import { useUserStore } from '@/lib/user-store'
 
 interface ReportData {
-  sales?: any
-  products?: any
-  customers?: any
-  revenue?: any[]
-  geographic?: any[]
-  orders?: any
+  dashboard_summary?: {
+    sales?: {
+      totalRevenue: number
+      totalOrders: number
+      averageOrderValue: number
+    }
+    products?: {
+      topSelling: Array<{
+        _id: string
+        productName: string
+        totalQuantity: number
+        totalRevenue: number
+      }>
+      lowStock: Array<{
+        _id: string
+        name: string
+        stockQuantity: number
+        hasVariants: boolean
+      }>
+    }
+    customers?: {
+      new: number
+      retention: {
+        totalCustomers: number
+        repeatCustomers: number
+        retentionRate: number
+      }
+    }
+  }
+  sales_overview?: {
+    totalRevenue: number
+    totalOrders: number
+    averageOrderValue: number
+    paymentMethods: Array<{
+      _id: string
+      count: number
+      revenue: number
+    }>
+    revenueByStatus: Array<{
+      _id: string
+      count: number
+      revenue: number
+    }>
+  }
+  product_performance?: {
+    topSellingProducts: Array<{
+      _id: string
+      productName: string
+      totalQuantity: number
+      totalRevenue: number
+      averagePrice: number
+    }>
+    categoryPerformance: Array<{
+      _id: string
+      category: string
+      totalQuantity: number
+      totalRevenue: number
+      uniqueProducts: number
+    }>
+    lowStockProducts: Array<{
+      _id: string
+      name: string
+      stockQuantity: number
+      hasVariants: boolean
+    }>
+    topRatedProducts: Array<{
+      _id: string
+      productName: string
+      averageRating: number
+      totalReviews: number
+    }>
+  }
+  customer_analytics?: {
+    newCustomers: number
+    topCustomers: Array<{
+      _id: string
+      customerEmail: string
+      totalOrders: number
+      totalSpent: number
+      lastOrderDate: string
+    }>
+    geographicDistribution: Array<{
+      county: string
+      orderCount: number
+      revenue: number
+      customerCount: number
+    }>
+    customerRetention: {
+      totalCustomers: number
+      repeatCustomers: number
+      retentionRate: number
+    }
+  }
+  geographic_distribution?: Array<{
+    county: string
+    area: string
+    orderCount: number
+    revenue: number
+    customerCount: number
+  }>
 }
 
 export default function AdminReportsPage() {
@@ -62,11 +152,19 @@ export default function AdminReportsPage() {
         params.append('endDate', customEndDate)
       }
       
-      const response = await fetch(`/api/admin/reports?${params}`)
+      const response = await fetch(`/api/admin/reports?${params}`, {
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      })
       
       if (response.ok) {
         const data = await response.json()
-        setReportData(prev => ({ ...prev, [reportType.replace('-', '_')]: data }))
+        const key = reportType.replace('-', '_') as keyof ReportData
+        setReportData(prev => ({ ...prev, [key]: data }))
+      } else {
+        console.error('Failed to fetch report data:', response.status)
       }
     } catch (error) {
       console.error('Error fetching report data:', error)
@@ -77,7 +175,8 @@ export default function AdminReportsPage() {
 
   const refreshData = async () => {
     setRefreshing(true)
-    await fetchReportData(activeTab === 'overview' ? 'dashboard-summary' : activeTab.replace('-', '_'))
+    const reportType = activeTab === 'overview' ? 'dashboard-summary' : activeTab.replace('-', '_')
+    await fetchReportData(reportType)
     setRefreshing(false)
   }
 
@@ -105,18 +204,25 @@ export default function AdminReportsPage() {
         params.append('endDate', customEndDate)
       }
       
-      const response = await fetch(`/api/admin/reports/export?${params}`)
+      const response = await fetch(`/api/admin/reports/export?${params}`, {
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      })
       
       if (response.ok) {
         const blob = await response.blob()
         const url = window.URL.createObjectURL(blob)
         const a = document.createElement('a')
         a.href = url
-        a.download = `report-${new Date().toISOString().split('T')[0]}.csv`
+        a.download = `electromatt-report-${new Date().toISOString().split('T')[0]}.csv`
         document.body.appendChild(a)
         a.click()
         window.URL.revokeObjectURL(url)
         document.body.removeChild(a)
+      } else {
+        console.error('Failed to export report:', response.status)
       }
     } catch (error) {
       console.error('Error exporting report:', error)
@@ -124,7 +230,14 @@ export default function AdminReportsPage() {
   }
 
   if (!user || (user.role !== 'admin' && user.role !== 'super_admin')) {
-    return <div>Access denied</div>
+    return (
+      <div className="p-6">
+        <div className="text-center py-12">
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">Access Denied</h2>
+          <p className="text-gray-600">You don't have permission to view reports.</p>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -244,8 +357,15 @@ export default function AdminReportsPage() {
   )
 }
 
-function OverviewTab({ data, formatCurrency, formatNumber }: any) {
-  if (!data) return <div>Loading...</div>
+interface TabProps {
+  data: any
+  formatCurrency: (amount: number) => string
+  formatNumber: (num: number) => string
+  onLoad?: () => void
+}
+
+function OverviewTab({ data, formatCurrency, formatNumber }: TabProps) {
+  if (!data) return <div className="text-center py-8">Loading overview data...</div>
 
   return (
     <>
@@ -258,7 +378,6 @@ function OverviewTab({ data, formatCurrency, formatNumber }: any) {
                 <p className="text-sm text-gray-600">Total Revenue</p>
                 <p className="text-2xl font-bold">{formatCurrency(data.sales?.totalRevenue || 0)}</p>
               </div>
-              <DollarSign className="w-8 h-8 text-green-500" />
             </div>
           </CardContent>
         </Card>
@@ -270,7 +389,6 @@ function OverviewTab({ data, formatCurrency, formatNumber }: any) {
                 <p className="text-sm text-gray-600">Total Orders</p>
                 <p className="text-2xl font-bold">{formatNumber(data.sales?.totalOrders || 0)}</p>
               </div>
-              <ShoppingCart className="w-8 h-8 text-blue-500" />
             </div>
           </CardContent>
         </Card>
@@ -294,7 +412,6 @@ function OverviewTab({ data, formatCurrency, formatNumber }: any) {
                 <p className="text-sm text-gray-600">Avg Order Value</p>
                 <p className="text-2xl font-bold">{formatCurrency(data.sales?.averageOrderValue || 0)}</p>
               </div>
-              <TrendingUp className="w-8 h-8 text-orange-500" />
             </div>
           </CardContent>
         </Card>
@@ -307,20 +424,26 @@ function OverviewTab({ data, formatCurrency, formatNumber }: any) {
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            {data.products?.topSelling?.map((product: any, index: number) => (
-              <div key={product._id} className="flex items-center justify-between p-3 bg-gray-50 rounded">
-                <div className="flex items-center gap-3">
-                  <span className="font-semibold text-gray-500">#{index + 1}</span>
-                  <div>
-                    <p className="font-medium">{product.productName}</p>
-                    <p className="text-sm text-gray-600">{formatNumber(product.totalQuantity)} sold</p>
+            {data.products?.topSelling?.length > 0 ? (
+              data.products.topSelling.map((product: any, index: number) => (
+                <div key={product._id} className="flex items-center justify-between p-3 bg-gray-50 rounded">
+                  <div className="flex items-center gap-3">
+                    <span className="font-semibold text-gray-500">#{index + 1}</span>
+                    <div>
+                      <p className="font-medium">{product.productName}</p>
+                      <p className="text-sm text-gray-600">{formatNumber(product.totalQuantity)} sold</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-semibold">{formatCurrency(product.totalRevenue)}</p>
                   </div>
                 </div>
-                <div className="text-right">
-                  <p className="font-semibold">{formatCurrency(product.totalRevenue)}</p>
-                </div>
+              ))
+            ) : (
+              <div className="text-center py-4 text-gray-500">
+                No product data available for this period
               </div>
-            ))}
+            )}
           </div>
         </CardContent>
       </Card>
@@ -328,12 +451,12 @@ function OverviewTab({ data, formatCurrency, formatNumber }: any) {
   )
 }
 
-function SalesTab({ data, formatCurrency, formatNumber, onLoad }: any) {
+function SalesTab({ data, formatCurrency, formatNumber, onLoad }: TabProps) {
   useEffect(() => {
-    if (!data) onLoad()
+    if (!data && onLoad) onLoad()
   }, [data, onLoad])
 
-  if (!data) return <div>Loading sales data...</div>
+  if (!data) return <div className="text-center py-8">Loading sales data...</div>
 
   return (
     <>
@@ -346,7 +469,6 @@ function SalesTab({ data, formatCurrency, formatNumber, onLoad }: any) {
                 <p className="text-sm text-gray-600">Total Revenue</p>
                 <p className="text-2xl font-bold">{formatCurrency(data.totalRevenue)}</p>
               </div>
-              <DollarSign className="w-8 h-8 text-green-500" />
             </div>
           </CardContent>
         </Card>
@@ -358,7 +480,6 @@ function SalesTab({ data, formatCurrency, formatNumber, onLoad }: any) {
                 <p className="text-sm text-gray-600">Total Orders</p>
                 <p className="text-2xl font-bold">{formatNumber(data.totalOrders)}</p>
               </div>
-              <ShoppingCart className="w-8 h-8 text-blue-500" />
             </div>
           </CardContent>
         </Card>
@@ -370,7 +491,6 @@ function SalesTab({ data, formatCurrency, formatNumber, onLoad }: any) {
                 <p className="text-sm text-gray-600">Average Order Value</p>
                 <p className="text-2xl font-bold">{formatCurrency(data.averageOrderValue)}</p>
               </div>
-              <TrendingUp className="w-8 h-8 text-orange-500" />
             </div>
           </CardContent>
         </Card>
@@ -383,17 +503,23 @@ function SalesTab({ data, formatCurrency, formatNumber, onLoad }: any) {
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            {data.paymentMethods?.map((method: any) => (
-              <div key={method._id} className="flex items-center justify-between p-3 bg-gray-50 rounded">
-                <div>
-                  <p className="font-medium capitalize">{method._id.replace('_', ' ')}</p>
-                  <p className="text-sm text-gray-600">{formatNumber(method.count)} orders</p>
+            {data.paymentMethods?.length > 0 ? (
+              data.paymentMethods.map((method: any) => (
+                <div key={method._id} className="flex items-center justify-between p-3 bg-gray-50 rounded">
+                  <div>
+                    <p className="font-medium capitalize">{method._id?.replace('_', ' ') || 'Unknown'}</p>
+                    <p className="text-sm text-gray-600">{formatNumber(method.count)} orders</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-semibold">{formatCurrency(method.revenue)}</p>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <p className="font-semibold">{formatCurrency(method.revenue)}</p>
-                </div>
+              ))
+            ) : (
+              <div className="text-center py-4 text-gray-500">
+                No payment method data available
               </div>
-            ))}
+            )}
           </div>
         </CardContent>
       </Card>
@@ -401,12 +527,12 @@ function SalesTab({ data, formatCurrency, formatNumber, onLoad }: any) {
   )
 }
 
-function ProductsTab({ data, formatCurrency, formatNumber, onLoad }: any) {
+function ProductsTab({ data, formatCurrency, formatNumber, onLoad }: TabProps) {
   useEffect(() => {
-    if (!data) onLoad()
+    if (!data && onLoad) onLoad()
   }, [data, onLoad])
 
-  if (!data) return <div>Loading product data...</div>
+  if (!data) return <div className="text-center py-8">Loading product data...</div>
 
   return (
     <>
@@ -485,12 +611,12 @@ function ProductsTab({ data, formatCurrency, formatNumber, onLoad }: any) {
   )
 }
 
-function CustomersTab({ data, formatCurrency, formatNumber, onLoad }: any) {
+function CustomersTab({ data, formatCurrency, formatNumber, onLoad }: TabProps) {
   useEffect(() => {
-    if (!data) onLoad()
+    if (!data && onLoad) onLoad()
   }, [data, onLoad])
 
-  if (!data) return <div>Loading customer data...</div>
+  if (!data) return <div className="text-center py-8">Loading customer data...</div>
 
   return (
     <>
@@ -503,7 +629,6 @@ function CustomersTab({ data, formatCurrency, formatNumber, onLoad }: any) {
                 <p className="text-sm text-gray-600">New Customers</p>
                 <p className="text-2xl font-bold">{formatNumber(data.newCustomers)}</p>
               </div>
-              <Users className="w-8 h-8 text-blue-500" />
             </div>
           </CardContent>
         </Card>
@@ -515,7 +640,6 @@ function CustomersTab({ data, formatCurrency, formatNumber, onLoad }: any) {
                 <p className="text-sm text-gray-600">Retention Rate</p>
                 <p className="text-2xl font-bold">{data.customerRetention?.retentionRate?.toFixed(1)}%</p>
               </div>
-              <TrendingUp className="w-8 h-8 text-green-500" />
             </div>
           </CardContent>
         </Card>
@@ -564,12 +688,12 @@ function CustomersTab({ data, formatCurrency, formatNumber, onLoad }: any) {
   )
 }
 
-function GeographicTab({ data, formatCurrency, formatNumber, onLoad }: any) {
+function GeographicTab({ data, formatCurrency, formatNumber, onLoad }: TabProps) {
   useEffect(() => {
-    if (!data) onLoad()
+    if (!data && onLoad) onLoad()
   }, [data, onLoad])
 
-  if (!data) return <div>Loading geographic data...</div>
+  if (!data) return <div className="text-center py-8">Loading geographic data...</div>
 
   return (
     <Card>
@@ -578,22 +702,28 @@ function GeographicTab({ data, formatCurrency, formatNumber, onLoad }: any) {
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
-          {data?.map((location: any, index: number) => (
-            <div key={`${location.county}-${location.area}`} className="flex items-center justify-between p-3 bg-gray-50 rounded">
-              <div className="flex items-center gap-3">
-                <MapPin className="w-4 h-4 text-gray-500" />
-                <div>
-                  <p className="font-medium">{location.county} - {location.area}</p>
-                  <p className="text-sm text-gray-600">
-                    {formatNumber(location.orderCount)} orders • {formatNumber(location.customerCount)} customers
-                  </p>
+          {data && data.length > 0 ? (
+            data.map((location: any) => (
+              <div key={`${location.county}-${location.area}`} className="flex items-center justify-between p-3 bg-gray-50 rounded">
+                <div className="flex items-center gap-3">
+                  <MapPin className="w-4 h-4 text-gray-500" />
+                  <div>
+                    <p className="font-medium">{location.county} - {location.area}</p>
+                    <p className="text-sm text-gray-600">
+                      {formatNumber(location.orderCount)} orders • {formatNumber(location.customerCount)} customers
+                    </p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="font-semibold">{formatCurrency(location.revenue)}</p>
                 </div>
               </div>
-              <div className="text-right">
-                <p className="font-semibold">{formatCurrency(location.revenue)}</p>
-              </div>
+            ))
+          ) : (
+            <div className="text-center py-4 text-gray-500">
+              No geographic data available for this period
             </div>
-          ))}
+          )}
         </div>
       </CardContent>
     </Card>

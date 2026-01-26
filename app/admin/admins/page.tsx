@@ -62,6 +62,8 @@ export default function AdminsPage() {
   const [roleFilter, setRoleFilter] = useState('all')
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
   const [editingAdmin, setEditingAdmin] = useState<Admin | null>(null)
+  const [showClearConfirm, setShowClearConfirm] = useState(false)
+  const [clearingAdmins, setClearingAdmins] = useState(false)
 
   useEffect(() => {
     fetchAdmins()
@@ -175,6 +177,41 @@ export default function AdminsPage() {
     }
   }
 
+  const handleClearAllAdmins = async () => {
+    if (!showClearConfirm) {
+      setShowClearConfirm(true)
+      return
+    }
+
+    setClearingAdmins(true)
+    try {
+      const response = await fetch('/api/admin/clear-admins', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setMessage({ 
+          type: 'success', 
+          text: `${data.message}. You will need to create a new admin user.` 
+        })
+        setAdmins([])
+        setShowClearConfirm(false)
+      } else {
+        const error = await response.json()
+        setMessage({ type: 'error', text: error.error || 'Failed to clear admin users' })
+      }
+    } catch (error) {
+      setMessage({ type: 'error', text: 'Network error while clearing admin users' })
+    } finally {
+      setClearingAdmins(false)
+      setShowClearConfirm(false)
+    }
+  }
+
   const filteredAdmins = admins.filter(admin => {
     const matchesSearch = 
       admin.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -228,11 +265,44 @@ export default function AdminsPage() {
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">Admin Management</h1>
-        <p className="text-gray-600 mt-2">
-          Manage admin users and their permissions
-        </p>
+      <div className="flex justify-between items-start">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Admin Management</h1>
+          <p className="text-gray-600 mt-2">
+            Manage admin users and their permissions
+          </p>
+        </div>
+        
+        {/* Clear All Admins Button */}
+        <div className="flex gap-2">
+          {showClearConfirm ? (
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={() => setShowClearConfirm(false)}
+                disabled={clearingAdmins}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={handleClearAllAdmins}
+                disabled={clearingAdmins}
+              >
+                {clearingAdmins ? 'Clearing...' : 'Confirm Clear All'}
+              </Button>
+            </div>
+          ) : (
+            <Button
+              variant="destructive"
+              onClick={handleClearAllAdmins}
+              disabled={admins.length === 0}
+            >
+              <UserX className="h-4 w-4 mr-2" />
+              Clear All Admins
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Messages */}
@@ -244,6 +314,17 @@ export default function AdminsPage() {
             <AlertCircle className="h-4 w-4" />
           )}
           <AlertDescription>{message.text}</AlertDescription>
+        </Alert>
+      )}
+
+      {/* Clear Confirmation Warning */}
+      {showClearConfirm && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            <strong>⚠️ WARNING:</strong> This will permanently delete ALL admin users ({admins.length} users). 
+            Make sure you have a way to create a new admin user after this operation. This action cannot be undone.
+          </AlertDescription>
         </Alert>
       )}
 

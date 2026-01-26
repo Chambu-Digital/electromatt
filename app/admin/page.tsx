@@ -190,9 +190,7 @@ export default function AdminDashboard() {
               <CardContent className="p-6">
                 <div className="flex items-center">
                   <div className="shrink-0">
-                    <div className="bg-blue-500 rounded-lg p-3">
-                      <Package className="h-6 w-6 text-white" />
-                    </div>
+                   
                   </div>
                   <div className="ml-4 flex-1">
                     <p className="text-sm font-medium text-muted-foreground">Total Products</p>
@@ -211,9 +209,7 @@ export default function AdminDashboard() {
               <CardContent className="p-6">
                 <div className="flex items-center">
                   <div className="shrink-0">
-                    <div className="bg-yellow-500 rounded-lg p-3">
-                      <ShoppingCart className="h-6 w-6 text-white" />
-                    </div>
+                   
                   </div>
                   <div className="ml-4 flex-1">
                     <p className="text-sm font-medium text-muted-foreground">Total Orders</p>
@@ -255,9 +251,7 @@ export default function AdminDashboard() {
               <CardContent className="p-6">
                 <div className="flex items-center">
                   <div className="shrink-0">
-                    <div className="bg-green-500 rounded-lg p-3">
-                      <DollarSign className="h-6 w-6 text-white" />
-                    </div>
+                   
                   </div>
                   <div className="ml-4 flex-1">
                     <p className="text-sm font-medium text-muted-foreground">Total Revenue</p>
@@ -332,7 +326,6 @@ export default function AdminDashboard() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center">
-              <Activity className="w-5 h-5 mr-2" />
               Recent Activity (Last 7 Days)
             </CardTitle>
             <CardDescription>
@@ -343,7 +336,6 @@ export default function AdminDashboard() {
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <PermissionCheck permissions={[PERMISSIONS.ORDERS_VIEW]}>
                 <div className="flex items-center p-4 bg-muted/50 rounded-lg">
-                  <ShoppingCart className="w-8 h-8 text-yellow-600 mr-3" />
                   <div>
                     <p className="text-2xl font-bold">{stats.activity.ordersThisWeek}</p>
                     <p className="text-sm text-muted-foreground">New Orders</p>

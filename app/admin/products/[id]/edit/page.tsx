@@ -332,7 +332,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
             />
             <label htmlFor="hasVariants" className="ml-2 block text-sm font-medium text-gray-900">
-              This product has variants (different sizes, scents, colors, etc.)
+              This product has variants (different sizes, colors, etc.)
             </label>
           </div>
           
@@ -566,7 +566,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
         )}
 
         {/* Product Details */}
-        <div className="bg-white shadow rounded-lg p-6">
+        {/* <div className="bg-white shadow rounded-lg p-6">
           <h2 className="text-lg font-semibold mb-4">Product Details</h2>
           
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -596,94 +596,10 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
               />
             </div>
           </div>
-        </div>
+        </div> */}
 
-        {/* Benefits & Tags */}
-        <div className="bg-white shadow rounded-lg p-6">
-          <h2 className="text-lg font-semibold mb-4">Benefits & Tags</h2>
-          
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-            {/* Benefits */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Product Benefits
-              </label>
-              <div className="flex gap-2 mb-2">
-                <input
-                  type="text"
-                  value={newBenefit}
-                  onChange={(e) => setNewBenefit(e.target.value)}
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="e.g., Deep hydration, Anti-aging, Moisturizing (separate with commas)"
-                />
-                <Button
-                  type="button"
-                  onClick={() => addArrayItem('benefits', newBenefit)}
-                  disabled={!newBenefit.trim()}
-                >
-                  Add
-                </Button>
-              </div>
-              <div className="space-y-2 max-h-32 overflow-y-auto">
-                {formData.benefits.map((benefit, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between p-2 bg-gray-50 rounded border"
-                  >
-                    <span className="text-sm">{benefit}</span>
-                    <button
-                      type="button"
-                      onClick={() => removeArrayItem('benefits', index)}
-                      className="text-red-600 hover:text-red-800"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Tags */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Tags
-              </label>
-              <div className="flex gap-2 mb-2">
-                <input
-                  type="text"
-                  value={newTag}
-                  onChange={(e) => setNewTag(e.target.value)}
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="e.g., organic, natural, vegan (separate with commas)"
-                />
-                <Button
-                  type="button"
-                  onClick={() => addArrayItem('tags', newTag)}
-                  disabled={!newTag.trim()}
-                >
-                  Add
-                </Button>
-              </div>
-              <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
-                {formData.tags.map((tag, index) => (
-                  <span
-                    key={index}
-                    className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
-                  >
-                    {tag}
-                    <button
-                      type="button"
-                      onClick={() => removeArrayItem('tags', index)}
-                      className="ml-1 text-blue-600 hover:text-blue-800"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
+        
+      
 
         {/* Product Images */}
         <div className="bg-white shadow rounded-lg p-6">
