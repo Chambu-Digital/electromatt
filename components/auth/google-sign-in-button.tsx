@@ -12,12 +12,14 @@ declare global {
 }
 
 interface GoogleSignInButtonProps {
+  returnTo?: string
   onSuccess?: () => void
   onError?: (error: string) => void
   disabled?: boolean
 }
 
 export default function GoogleSignInButton({ 
+  returnTo = '/',
   onSuccess, 
   onError, 
   disabled = false 
@@ -91,7 +93,7 @@ export default function GoogleSignInButton({
       if (result.success) {
         console.log('Google authentication successful')
         onSuccess?.()
-        router.push('/account')
+        router.push(returnTo)
       } else {
         console.error('Google authentication failed:', result.error)
         onError?.(result.error || 'Google sign-in failed')

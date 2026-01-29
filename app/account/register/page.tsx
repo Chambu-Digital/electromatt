@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -12,13 +12,23 @@ export default function RegisterPage() {
   const router = useRouter()
   const { user } = useUserStore()
   const { success: showSuccessToast, error: showErrorToast } = useToast()
+  const [returnTo, setReturnTo] = useState<string>('/')
+
+  // Get return URL from query params
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search)
+    const returnUrl = urlParams.get('returnTo')
+    if (returnUrl) {
+      setReturnTo(decodeURIComponent(returnUrl))
+    }
+  }, [])
 
   // Redirect if already logged in
   useEffect(() => {
     if (user) {
-      router.push('/account')
+      router.push(returnTo)
     }
-  }, [user, router])
+  }, [user, router, returnTo])
 
   if (user) {
     return null // Will redirect
@@ -46,6 +56,7 @@ export default function RegisterPage() {
           <CardContent className="space-y-6">
             {/* Google Sign-In Button */}
             <GoogleSignInButton
+              returnTo={returnTo}
               onSuccess={() => {
                 showSuccessToast('Welcome to Electromatt!')
               }}

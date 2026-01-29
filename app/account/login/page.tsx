@@ -56,6 +56,7 @@ export default function LoginPage() {
           <CardContent className="space-y-6">
             {/* Google Sign-In */}
             <GoogleSignInButton
+              returnTo={returnTo}
               onSuccess={() => {
                 showSuccessToast('Welcome back!')
               }}
