@@ -29,6 +29,8 @@ export default function GoogleSignInButton({
   const [isGoogleLoaded, setIsGoogleLoaded] = useState(false)
   const buttonRef = useRef<HTMLDivElement>(null)
 
+  console.log('GoogleSignInButton - returnTo prop:', returnTo)
+
   useEffect(() => {
     // Check if Google Client ID is available
     if (!process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID) {
@@ -88,6 +90,7 @@ export default function GoogleSignInButton({
     try {
       // Don't log the full response as it contains sensitive credential data
       console.log('Google authentication initiated')
+      console.log('GoogleSignInButton - redirecting to:', returnTo)
       const result = await loginWithGoogle(response.credential)
       
       if (result.success) {

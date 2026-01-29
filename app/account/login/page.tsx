@@ -18,8 +18,12 @@ export default function LoginPage() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search)
     const returnUrl = urlParams.get('returnTo')
+    console.log('Login page - URL search params:', window.location.search)
+    console.log('Login page - returnTo param:', returnUrl)
     if (returnUrl) {
-      setReturnTo(decodeURIComponent(returnUrl))
+      const decodedUrl = decodeURIComponent(returnUrl)
+      console.log('Login page - decoded returnTo:', decodedUrl)
+      setReturnTo(decodedUrl)
     }
   }, [])
 
