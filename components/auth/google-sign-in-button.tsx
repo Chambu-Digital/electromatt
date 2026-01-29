@@ -28,6 +28,17 @@ export default function GoogleSignInButton({
   const router = useRouter()
   const [isGoogleLoaded, setIsGoogleLoaded] = useState(false)
   const buttonRef = useRef<HTMLDivElement>(null)
+  
+  // Store the returnTo value in a ref to prevent it from changing during re-renders
+  const returnToRef = useRef(returnTo)
+  
+  // Update the ref when returnTo prop changes
+  useEffect(() => {
+    if (returnTo && returnTo !== '/') {
+      returnToRef.current = returnTo
+      console.log('GoogleSignInButton - updated returnTo ref:', returnTo)
+    }
+  }, [returnTo])
 
   console.log('GoogleSignInButton - returnTo prop:', returnTo)
 
@@ -90,13 +101,14 @@ export default function GoogleSignInButton({
     try {
       // Don't log the full response as it contains sensitive credential data
       console.log('Google authentication initiated')
-      console.log('GoogleSignInButton - redirecting to:', returnTo)
+      const redirectUrl = returnToRef.current
+      console.log('GoogleSignInButton - redirecting to:', redirectUrl)
       const result = await loginWithGoogle(response.credential)
       
       if (result.success) {
         console.log('Google authentication successful')
         onSuccess?.()
-        router.push(returnTo)
+        router.push(redirectUrl)
       } else {
         console.error('Google authentication failed:', result.error)
         onError?.(result.error || 'Google sign-in failed')
