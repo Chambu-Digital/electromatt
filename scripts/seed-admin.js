@@ -1,6 +1,79 @@
+/**
+ * Optimized admin seeding script with proper connection handling
+ */
+
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
-require('dotenv').config({ path: '.env' })
+require('dotenv').config({ path: '.env.local' })
+
+// Production-optimized connection settings
+const MONGODB_OPTIONS = {
+  maxPoolSize: 10,
+  minPoolSize: 1,
+  maxIdleTimeMS: 30000,
+  serverSelectionTimeoutMS: 5000,
+  socketTimeoutMS: 45000,
+  bufferCommands: false,
+  bufferMaxEntries: 0,
+  retryWrites: true,
+  retryReads: true,
+  heartbeatFrequencyMS: 10000,
+  compressors: ['zlib'],
+  connectTimeoutMS: 10000,
+  family: 4,
+}
+
+/**
+ * Connect to MongoDB with optimized settings
+ */
+async function connectDB() {
+  if (mongoose.connections[0].readyState) {
+    console.log('📦 Using existing MongoDB connection')
+    return
+  }
+
+  const MONGODB_URI = process.env.MONGODB_URI
+  if (!MONGODB_URI) {
+    throw new Error('Please define the MONGODB_URI environment variable')
+  }
+
+  try {
+    console.log('🔗 Connecting to MongoDB...')
+    await mongoose.connect(MONGODB_URI, MONGODB_OPTIONS)
+    console.log('✅ Connected to MongoDB successfully')
+    setupGracefulShutdown()
+  } catch (error) {
+    console.error('❌ MongoDB connection failed:', error)
+    process.exit(1)
+  }
+}
+
+/**
+ * Gracefully close database connection
+ */
+async function closeDB() {
+  try {
+    await mongoose.connection.close()
+    console.log('🔒 MongoDB connection closed')
+  } catch (error) {
+    console.error('❌ Error closing MongoDB connection:', error)
+  }
+}
+
+/**
+ * Set up graceful shutdown handlers
+ */
+function setupGracefulShutdown() {
+  const gracefulShutdown = async (signal) => {
+    console.log(`\n📤 Received ${signal}. Gracefully shutting down...`)
+    await closeDB()
+    process.exit(0)
+  }
+
+  process.on('SIGTERM', () => gracefulShutdown('SIGTERM'))
+  process.on('SIGINT', () => gracefulShutdown('SIGINT'))
+  process.on('SIGUSR2', () => gracefulShutdown('SIGUSR2'))
+}
 
 // Define User schema directly in the script
 const UserSchema = new mongoose.Schema({
@@ -81,9 +154,7 @@ const User = mongoose.model('User', UserSchema)
 
 async function seedAdmin() {
   try {
-    console.log('Connecting to MongoDB...')
-    await mongoose.connect(process.env.MONGODB_URI)
-    console.log('Connected to MongoDB')
+    await connectDB()
 
     // Check if admin already exists
     const existingAdmin = await User.findOne({ email: 'admin@electromatt.co.ke' })
@@ -142,11 +213,13 @@ async function seedAdmin() {
 
   } catch (error) {
     console.error('Error seeding admin:', error)
+    process.exit(1)
   } finally {
-    await mongoose.disconnect()
-    console.log('Disconnected from MongoDB')
+    await closeDB()
   }
 }
 
-// Run the seeding
-seedAdmin()
+// Run the script if this file is executed directly
+if (require.main === module) {
+  seedAdmin()
+}
