@@ -15,6 +15,9 @@ export const metadata: Metadata = {
   title: 'ELECTROMATT - Premium Electronics & Appliances',
   description: 'Your trusted electronics store for fridges, microwaves, TVs, smartphones, and all electronic appliances. Quality products with excellent service.',
   generator: 'v0.app',
+  verification: {
+    google: 'KO8RUPFOnU-K9AlHfBWRRcuYQG6jIrs9yihNFWfJ-yY',
+  },
   icons: {
     icon: [
       {

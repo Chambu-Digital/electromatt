@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import connectDB from '@/lib/mongodb'
+import { ensureDBConnection } from '@/lib/db-utils'
 import Product from '@/models/Product'
 import mongoose from 'mongoose'
 
 export async function GET(request: NextRequest) {
   try {
-    await connectDB()
+    await ensureDBConnection()
     
     const { searchParams } = new URL(request.url)
     const category = searchParams.get('category')
