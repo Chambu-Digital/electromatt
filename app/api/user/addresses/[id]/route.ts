@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import connectDB from '@/lib/mongodb'
+import { ensureDBConnection } from '@/lib/db-utils'
 import User from '@/models/User'
 import { requireAuth } from '@/lib/auth'
 import { z } from 'zod'
@@ -26,7 +26,7 @@ export async function PATCH(
     // Validate input
     const validatedData = addressSchema.parse(body)
     
-    await connectDB()
+    await ensureDBConnection()
     
     const userData = await User.findById(user.id)
     
@@ -103,7 +103,7 @@ export async function DELETE(
     const user = await requireAuth(request)
     const { id } = await params
     
-    await connectDB()
+    await ensureDBConnection()
     
     const userData = await User.findById(user.id)
     

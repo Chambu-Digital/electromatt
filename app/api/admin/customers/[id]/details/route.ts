@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import connectDB from '@/lib/mongodb'
+import { ensureDBConnection } from '@/lib/db-utils'
 import User from '@/models/User'
 import Order from '@/models/Order'
 import { requireAuth } from '@/lib/auth'
@@ -22,7 +22,7 @@ export async function GET(
 
     const { id } = await params
     
-    await connectDB()
+    await ensureDBConnection()
     
     // Validate customer ID
     if (!mongoose.Types.ObjectId.isValid(id)) {

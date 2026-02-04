@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import connectDB from '@/lib/mongodb'
+import { ensureDBConnection } from '@/lib/db-utils'
 import User from '@/models/User'
 import { requireAuth } from '@/lib/auth'
 import mongoose from 'mongoose'
@@ -22,7 +22,7 @@ export async function PATCH(
     const { id } = params
     const body = await request.json()
     
-    await connectDB()
+    await ensureDBConnection()
     
     // Validate customer ID
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -113,7 +113,7 @@ export async function GET(
 
     const { id } = params
     
-    await connectDB()
+    await ensureDBConnection()
     
     // Validate customer ID
     if (!mongoose.Types.ObjectId.isValid(id)) {

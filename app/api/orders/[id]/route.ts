@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import connectDB from '@/lib/mongodb'
+import { ensureDBConnection } from '@/lib/db-utils'
 import Order from '@/models/Order'
 import { requireAuth } from '@/lib/auth'
 import mongoose from 'mongoose'
@@ -12,7 +12,7 @@ export async function GET(
     const user = await requireAuth(request)
     const { id } = await params
     
-    await connectDB()
+    await ensureDBConnection()
     
     // Find order by ID and ensure it belongs to the current user
     const order = await Order.findOne({
@@ -55,7 +55,7 @@ export async function PATCH(
     const body = await request.json()
     const { id } = await params
     
-    await connectDB()
+    await ensureDBConnection()
     
     // Find order and ensure it belongs to the current user
     const order = await Order.findOne({

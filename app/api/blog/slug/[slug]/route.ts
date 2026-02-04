@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import connectDB from '@/lib/mongodb'
+import { ensureDBConnection } from '@/lib/db-utils'
 import BlogPost from '@/models/BlogPost'
 import mongoose from 'mongoose'
 
@@ -9,7 +9,7 @@ export async function GET(
 ) {
   try {
     const { slug } = await params;
-    await connectDB();
+    await ensureDBConnection();
     
     let post;
     try {

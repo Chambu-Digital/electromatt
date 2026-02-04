@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import connectDB from '@/lib/mongodb'
+import { ensureDBConnection } from '@/lib/db-utils'
 import mongoose from 'mongoose'
 
 // Product View Schema for tracking
@@ -56,7 +56,7 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
-    await connectDB()
+    await ensureDBConnection()
     
     const { id } = params
     const body = await request.json()
@@ -110,7 +110,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    await connectDB()
+    await ensureDBConnection()
     
     const { id } = params
     const { searchParams } = new URL(request.url)

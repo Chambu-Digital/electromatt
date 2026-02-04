@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import connectDB from '@/lib/mongodb'
+import { ensureDBConnection } from '@/lib/db-utils'
 import Banner from '@/models/Banner'
 import mongoose from 'mongoose'
 
@@ -14,7 +14,7 @@ export async function GET(
       return NextResponse.json({ error: 'Banner ID is required' }, { status: 400 })
     }
     
-    await connectDB()
+    await ensureDBConnection()
     
     // Validate ObjectId format
     if (!mongoose.Types.ObjectId.isValid(resolvedParams.id)) {
@@ -40,7 +40,7 @@ export async function PUT(
 ) {
   try {
     const resolvedParams = await params
-    await connectDB()
+    await ensureDBConnection()
     
     // Validate ObjectId format
     if (!mongoose.Types.ObjectId.isValid(resolvedParams.id)) {
@@ -72,7 +72,7 @@ export async function DELETE(
 ) {
   try {
     const resolvedParams = await params
-    await connectDB()
+    await ensureDBConnection()
     
     // Validate ObjectId format
     if (!mongoose.Types.ObjectId.isValid(resolvedParams.id)) {

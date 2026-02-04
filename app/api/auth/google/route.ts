@@ -46,8 +46,7 @@ export async function POST(request: NextRequest) {
     // Validate input
     const validatedData = googleAuthSchema.parse(body)
     
-    // Ensure DB connection is ready (no new connection created)
-    await ensureDBConnection()
+    await connectDB()
     
     // Verify Google token and get user info
     const googleUser = await verifyGoogleToken(validatedData.credential)

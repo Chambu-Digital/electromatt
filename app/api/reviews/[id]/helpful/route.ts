@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import connectDB from '@/lib/mongodb'
+import { ensureDBConnection } from '@/lib/db-utils'
 import Review from '@/models/Review'
 
 // POST /api/reviews/[id]/helpful - Mark review as helpful
@@ -8,7 +8,7 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
-    await connectDB()
+    await ensureDBConnection()
     
     const body = await request.json()
     const { helpful } = body // true for helpful, false for not helpful
