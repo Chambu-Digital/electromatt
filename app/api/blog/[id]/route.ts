@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { ensureDBConnection } from '@/lib/db-utils'
+import connectDB from '@/lib/mongodb'
 import BlogPost from '@/models/BlogPost'
 import mongoose from 'mongoose'
 
@@ -10,7 +10,7 @@ export async function GET(
   try {
     const { id } = await params;
     console.log('Blog [id] route called with ID:', id);
-    await ensureDBConnection();
+    await connectDB();
     
     // Validate ObjectId
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -52,7 +52,7 @@ export async function PUT(
 ) {
   try {
     const { id } = await params;
-    await ensureDBConnection();
+    await connectDB();
     
     const data = await request.json();
     
@@ -95,7 +95,7 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    await ensureDBConnection();
+    await connectDB();
     
     const post = await BlogPost.findByIdAndDelete(id);
     

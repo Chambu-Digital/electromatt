@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { ensureDBConnection } from '@/lib/db-utils'
+import connectDB from '@/lib/mongodb'
 import Area from '@/models/Area'
 import County from '@/models/County'
 import { requireAdmin } from '@/lib/auth'
@@ -12,7 +12,7 @@ export async function PUT(
   try {
     await requireAdmin(request)
 
-    await ensureDBConnection()
+    await connectDB()
     
     const { id } = await params
     const body = await request.json()
@@ -83,7 +83,7 @@ export async function DELETE(
   try {
     await requireAdmin(request)
 
-    await ensureDBConnection()
+    await connectDB()
     
     const { id } = await params
 

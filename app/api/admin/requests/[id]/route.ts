@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { ensureDBConnection } from '@/lib/db-utils'
+import connectDB from '@/lib/mongodb'
 import AdminRequest from '@/models/AdminRequest'
 import User from '@/models/User'
 import { requireAuth } from '@/lib/auth'
@@ -65,7 +65,7 @@ export async function PATCH(
     const body = await request.json()
     const validatedData = approveRequestSchema.parse(body)
     
-    await ensureDBConnection()
+    await connectDB()
     
     // Find the admin request
     const adminRequest = await AdminRequest.findById(id)

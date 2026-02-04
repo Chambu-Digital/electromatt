@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { ensureDBConnection } from '@/lib/db-utils'
+import connectDB from '@/lib/mongodb'
 import Review from '@/models/Review'
 import { requireAuth } from '@/lib/auth'
 
@@ -9,7 +9,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    await ensureDBConnection()
+    await connectDB()
     
     const review = await Review.findById(params.id)
       .populate('productId', 'name slug images')
@@ -36,7 +36,7 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    await ensureDBConnection()
+    await connectDB()
     
     const authUser = await requireAuth(request)
 
@@ -105,7 +105,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    await ensureDBConnection()
+    await connectDB()
     
     const authUser = await requireAuth(request)
 

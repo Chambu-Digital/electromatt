@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { ensureDBConnection } from '@/lib/db-utils'
+import connectDB from '@/lib/mongodb'
 import User from '@/models/User'
 import { generateToken } from '@/lib/auth'
 import { setAuthCookie } from '@/lib/auth-server'

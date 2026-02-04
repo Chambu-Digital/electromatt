@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { ensureDBConnection } from '@/lib/db-utils'
+import connectDB from '@/lib/mongodb'
 import Order from '@/models/Order'
 import { requireAuth } from '@/lib/auth'
 import { z } from 'zod'
@@ -27,7 +27,7 @@ export async function GET(
       )
     }
     
-    await ensureDBConnection()
+    await connectDB()
     
     const order = await Order.findById(id).lean()
     
@@ -77,7 +77,7 @@ export async function PATCH(
     // Validate input
     const validatedData = updateOrderSchema.parse(body)
     
-    await ensureDBConnection()
+    await connectDB()
     
     const order = await Order.findById(id)
     
