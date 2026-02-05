@@ -28,10 +28,6 @@ export default function NewProductPage() {
     category: '',
     categoryId: '',
     stockQuantity: '',
-    ingredients: '',
-    usage: '',
-    benefits: [] as string[],
-    tags: [] as string[],
     isActive: true,
     isFeatured: false,
     isNewProduct: false,
@@ -40,8 +36,7 @@ export default function NewProductPage() {
     flashDealDiscount: ''
   })
 
-  const [newBenefit, setNewBenefit] = useState('')
-  const [newTag, setNewTag] = useState('')
+
 
   useEffect(() => {
     fetchCategories()
@@ -111,28 +106,7 @@ export default function NewProductPage() {
     }))
   }
 
-  const addArrayItem = (field: 'benefits' | 'tags', value: string) => {
-    if (!value.trim()) return
-    
-    // Split by comma and clean up each item
-    const items = value.split(',').map(item => item.trim()).filter(item => item.length > 0)
-    
-    setFormData(prev => ({
-      ...prev,
-      [field]: [...prev[field], ...items]
-    }))
-    
-    // Clear the input
-    if (field === 'benefits') setNewBenefit('')
-    if (field === 'tags') setNewTag('')
-  }
 
-  const removeArrayItem = (field: 'benefits' | 'tags', index: number) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: prev[field].filter((_, i) => i !== index)
-    }))
-  }
 
   const handleCategoryChange = (categoryId: string) => {
     const category = categories.find(cat => cat._id === categoryId)
@@ -506,127 +480,7 @@ export default function NewProductPage() {
             </div>
           )}
 
-          {/* Product Details */}
-          <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Product Details</h3>
-            
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Ingredients
-                </label>
-                <textarea
-                  rows={3}
-                  value={formData.ingredients}
-                  onChange={(e) => setFormData(prev => ({ ...prev, ingredients: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="List of ingredients..."
-                />
-              </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Usage Instructions
-                </label>
-                <textarea
-                  rows={3}
-                  value={formData.usage}
-                  onChange={(e) => setFormData(prev => ({ ...prev, usage: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="How to use this product..."
-                />
-              </div>
-            </div>
-          </div>
-
-
-
-          {/* Benefits & Tags */}
-          <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Benefits & Tags</h3>
-            
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-              {/* Benefits */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Product Benefits
-                </label>
-                <div className="flex gap-2 mb-2">
-                  <input
-                    type="text"
-                    value={newBenefit}
-                    onChange={(e) => setNewBenefit(e.target.value)}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="e.g., Deep hydration, Anti-aging, Moisturizing (separate with commas)"
-                  />
-                  <Button
-                    type="button"
-                    onClick={() => addArrayItem('benefits', newBenefit)}
-                    disabled={!newBenefit.trim()}
-                  >
-                    Add
-                  </Button>
-                </div>
-                <div className="space-y-2 max-h-32 overflow-y-auto">
-                  {formData.benefits.map((benefit, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center justify-between p-2 bg-white rounded border"
-                    >
-                      <span className="text-sm">{benefit}</span>
-                      <button
-                        type="button"
-                        onClick={() => removeArrayItem('benefits', index)}
-                        className="text-red-600 hover:text-red-800"
-                      >
-                        <X className="h-4 w-4" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Tags */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Tags
-                </label>
-                <div className="flex gap-2 mb-2">
-                  <input
-                    type="text"
-                    value={newTag}
-                    onChange={(e) => setNewTag(e.target.value)}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="e.g., organic, natural, vegan (separate with commas)"
-                  />
-                  <Button
-                    type="button"
-                    onClick={() => addArrayItem('tags', newTag)}
-                    disabled={!newTag.trim()}
-                  >
-                    Add
-                  </Button>
-                </div>
-                <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
-                  {formData.tags.map((tag, index) => (
-                    <span
-                      key={index}
-                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
-                    >
-                      {tag}
-                      <button
-                        type="button"
-                        onClick={() => removeArrayItem('tags', index)}
-                        className="ml-1 text-blue-600 hover:text-blue-800"
-                      >
-                        <X className="h-3 w-3" />
-                      </button>
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
 
           {/* Product Settings */}
           <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
