@@ -9,16 +9,25 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const user = await requireAuth(request)
     const { id } = await params
     
     await connectDB()
     
-    // Find order by ID and ensure it belongs to the current user
-    const order = await Order.findOne({
-      _id: new mongoose.Types.ObjectId(id),
-      userId: new mongoose.Types.ObjectId(user.id)
-    }).lean()
+    // Check if id is an order number (starts with ORD-) or MongoDB ObjectId
+    let order
+    
+    if (id.startsWith('ORD-')) {
+      // Look up by order number - no auth required for order number lookup
+      order = await Order.findOne({ orderNumber: id }).lean()
+    } else {
+      // Look up by MongoDB ID - requires authentication
+      const user = await requireAuth(request)
+      
+      order = await Order.findOne({
+        _id: new mongoose.Types.ObjectId(id),
+        userId: new mongoose.Types.ObjectId(user.id)
+      }).lean()
+    }
     
     if (!order) {
       return NextResponse.json(

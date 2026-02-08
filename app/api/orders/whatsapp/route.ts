@@ -2,105 +2,97 @@ import { NextRequest, NextResponse } from 'next/server'
 import connectDB from '@/lib/mongodb'
 import Order from '@/models/Order'
 import Product from '@/models/Product'
-import mongoose from 'mongoose'
 
-// POST /api/orders/whatsapp - Create a WhatsApp order record
 export async function POST(request: NextRequest) {
   try {
     await connectDB()
-    
+
     const body = await request.json()
-    const { 
-      customerName, 
-      customerPhone, 
-      customerEmail, 
-      items, 
-      shippingAddress, 
+    const {
+      customerName,
+      customerPhone,
+      customerEmail = 'whatsapp@electromatt.co.ke',
+      items,
+      shippingAddress,
       customerNotes,
-      whatsappMessage 
+      whatsappMessage
     } = body
-    
-    if (!customerName || !customerPhone || !items || !Array.isArray(items) || items.length === 0) {
+
+    // Validate required fields
+    if (!customerName || !items || items.length === 0) {
       return NextResponse.json(
-        { error: 'Missing required fields: customerName, customerPhone, and items are required' },
+        { error: 'Customer name and items are required' },
         { status: 400 }
       )
     }
 
-    // Create a guest user ID for WhatsApp orders
-    const guestUserId = new mongoose.Types.ObjectId()
-    
-    // Process order items and calculate totals
-    let subtotal = 0
-    const processedItems = []
-    
-    for (const item of items) {
-      // Verify product exists
-      const product = await Product.findById(item.productId)
-      if (!product) {
-        return NextResponse.json(
-          { error: `Product not found: ${item.productId}` },
-          { status: 404 }
-        )
-      }
-      
-      const itemTotal = item.price * item.quantity
-      subtotal += itemTotal
-      
-      processedItems.push({
-        productId: item.productId,
-        productName: item.name || product.name,
-        productImage: item.image || (product.images && product.images[0]) || '/placeholder-product.jpg',
-        variantId: item.variantId,
-        variantDetails: item.variantDetails,
-        quantity: item.quantity,
-        price: item.price,
-        totalPrice: itemTotal
-      })
-    }
-    
-    // Calculate shipping (free for orders over 5000, otherwise 500)
+    // Calculate totals
+    const subtotal = items.reduce((sum: number, item: any) => 
+      sum + (item.price * item.quantity), 0
+    )
     const shippingCost = subtotal >= 5000 ? 0 : 500
-    const totalAmount = subtotal + shippingCost
-    
+    const total = subtotal + shippingCost
+
+    // Generate order number
+    const orderCount = await Order.countDocuments()
+    const orderNumber = `ORD-${Date.now()}-${orderCount + 1}`
+
+    // Prepare order items with product validation
+    const orderItems = await Promise.all(
+      items.map(async (item: any) => {
+        const product = await Product.findById(item.productId)
+        
+        return {
+          productId: item.productId,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          image: item.image || product?.images?.[0] || '',
+          variantId: item.variantId,
+          variantDetails: item.variantDetails
+        }
+      })
+    )
+
     // Create the order
-    const order = new Order({
-      userId: guestUserId,
-      customerEmail: customerEmail || 'whatsapp@electromatt.co.ke',
-      customerPhone: customerPhone,
-      items: processedItems,
+    const order = await Order.create({
+      orderNumber,
+      customerName,
+      customerEmail,
+      customerPhone: customerPhone || '+254713065412',
+      items: orderItems,
       subtotal,
       shippingCost,
-      taxAmount: 0,
-      discountAmount: 0,
-      totalAmount,
-      shippingAddress: {
-        name: customerName,
-        phone: customerPhone,
-        county: shippingAddress?.county || 'Nairobi',
-        area: shippingAddress?.area || 'CBD'
+      total,
+      shippingAddress: shippingAddress || {
+        county: 'Nairobi',
+        area: 'CBD',
+        address: 'To be confirmed via WhatsApp'
       },
-      status: 'pending',
+      paymentMethod: 'pending',
       paymentStatus: 'pending',
-      paymentMethod: 'mpesa', // Default for WhatsApp orders
+      orderStatus: 'pending',
       customerNotes: customerNotes || 'Order placed via WhatsApp',
-      adminNotes: `WhatsApp Order - Original Message: ${whatsappMessage || 'N/A'}`
+      adminNotes: `WhatsApp Order - ${new Date().toLocaleString()}\n\nMessage sent:\n${whatsappMessage || 'N/A'}`,
+      createdAt: new Date(),
+      updatedAt: new Date()
     })
 
-    await order.save()
-
     return NextResponse.json({
+      success: true,
       message: 'WhatsApp order recorded successfully',
       order: {
+        _id: order._id,
         orderNumber: order.orderNumber,
-        totalAmount: order.totalAmount,
-        status: order.status
+        total: order.total,
+        status: order.orderStatus
       }
-    }, { status: 201 })
-  } catch (error: any) {
+    })
+
+  } catch (error) {
     console.error('Error creating WhatsApp order:', error)
     return NextResponse.json(
-      { error: 'Failed to create WhatsApp order' },
+      { error: 'Failed to record WhatsApp order' },
       { status: 500 }
     )
   }

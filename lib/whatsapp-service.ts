@@ -153,6 +153,11 @@ Order Reference: ${data.order.orderNumber}`
       const whatsappLink = `https://wa.me/${businessPhone}?text=${encodedMessage}`
       window.open(whatsappLink, '_blank')
       
+      // Redirect to confirmation page
+      setTimeout(() => {
+        window.location.href = `/order-confirmation?orderNumber=${data.order.orderNumber}`
+      }, 500)
+      
       return data.order
     } else {
       console.error('Failed to record order')
@@ -160,6 +165,11 @@ Order Reference: ${data.order.orderNumber}`
       const encodedMessage = encodeURIComponent(message)
       const whatsappLink = `https://wa.me/${businessPhone}?text=${encodedMessage}`
       window.open(whatsappLink, '_blank')
+      
+      // Redirect to confirmation page without order number
+      setTimeout(() => {
+        window.location.href = '/order-confirmation'
+      }, 500)
     }
   } catch (error) {
     console.error('Error recording WhatsApp order:', error)
@@ -167,6 +177,11 @@ Order Reference: ${data.order.orderNumber}`
     const encodedMessage = encodeURIComponent(message)
     const whatsappLink = `https://wa.me/${businessPhone}?text=${encodedMessage}`
     window.open(whatsappLink, '_blank')
+    
+    // Redirect to confirmation page without order number
+    setTimeout(() => {
+      window.location.href = '/order-confirmation'
+    }, 500)
   }
 }
 
