@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { ToastProvider } from '@/components/ui/custom-toast'
 import GoogleOAuthProvider from '@/components/providers/google-oauth-provider'
+import Script from 'next/script'
 import './globals.css'
 
 const inter = Inter({ 
@@ -44,6 +45,21 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Google tag (gtag.js) */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=AW-17939579398"
+          strategy="afterInteractive"
+        />
+        <Script id="google-ads" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'AW-17939579398');
+          `}
+        </Script>
+      </head>
       <body className={`${inter.variable} font-sans antialiased leading-relaxed`}>
         <GoogleOAuthProvider>
           <ToastProvider>
