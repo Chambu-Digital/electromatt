@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Merchant Feed Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        .status {
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            border-left: 4px solid #4CAF50;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            max-height: 400px;
+        }
+        .feed-url {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin: 20px 0;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛍️ Google Merchant Feed Test</h1>
+        
+        <div class="info">
+            <strong>Feed URL:</strong>
+            <div class="feed-url" id="feedUrl">Loading...</div>
+        </div>
+
+        <div>
+            <button onclick="testFeed()">Test Feed</button>
+            <button onclick="viewFeed()">View Raw XML</button>
+            <button onclick="copyUrl()">Copy URL</button>
+        </div>
+
+        <div id="status"></div>
+
+        <div id="stats" style="display: none;">
+            <h2>Feed Statistics</h2>
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-label">Total Products</div>
+                    <div class="stat-value" id="totalProducts">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Feed Size</div>
+                    <div class="stat-value" id="feedSize">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Status</div>
+                    <div class="stat-value" id="feedStatus">-</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="preview" style="display: none;">
+            <h2>Feed Preview (First 3 Products)</h2>
+            <pre id="xmlPreview"></pre>
+        </div>
+    </div>
+
+    <script>
+        const baseUrl = window.location.origin;
+        const feedUrl = `${baseUrl}/google-feed.xml`;
+        
+        document.getElementById('feedUrl').textContent = feedUrl;
+
+        async function testFeed() {
+            const statusDiv = document.getElementById('status');
+            const statsDiv = document.getElementById('stats');
+            const previewDiv = document.getElementById('preview');
+            
+            statusDiv.innerHTML = '<div class="info">Testing feed... Please wait.</div>';
+            statsDiv.style.display = 'none';
+            previewDiv.style.display = 'none';
+
+            try {
+                const response = await fetch('/api/google-feed');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const text = await response.text();
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(text, 'text/xml');
+
+                // Check for XML parsing errors
+                const parseError = xmlDoc.querySelector('parsererror');
+                if (parseError) {
+                    throw new Error('Invalid XML: ' + parseError.textContent);
+                }
+
+                // Get statistics
+                const items = xmlDoc.getElementsByTagName('item');
+                const totalProducts = items.length;
+                const feedSize = (text.length / 1024).toFixed(2);
+
+                // Update stats
+                document.getElementById('totalProducts').textContent = totalProducts;
+                document.getElementById('feedSize').textContent = `${feedSize} KB`;
+                document.getElementById('feedStatus').textContent = '✓ Valid';
+                statsDiv.style.display = 'block';
+
+                // Show preview of first 3 products
+                let preview = '';
+                for (let i = 0; i < Math.min(3, items.length); i++) {
+                    const serializer = new XMLSerializer();
+                    preview += serializer.serializeToString(items[i]) + '\n\n';
+                }
+                document.getElementById('xmlPreview').textContent = preview || 'No products found';
+                previewDiv.style.display = 'block';
+
+                statusDiv.innerHTML = `
+                    <div class="success">
+                        <strong>✓ Feed is valid!</strong><br>
+                        Found ${totalProducts} product(s) in the feed.<br>
+                        Feed size: ${feedSize} KB
+                    </div>
+                `;
+
+            } catch (error) {
+                statusDiv.innerHTML = `
+                    <div class="error">
+                        <strong>✗ Feed test failed!</strong><br>
+                        Error: ${error.message}
+                    </div>
+                `;
+                console.error('Feed test error:', error);
+            }
+        }
+
+        function viewFeed() {
+            window.open(feedUrl, '_blank');
+        }
+
+        function copyUrl() {
+            navigator.clipboard.writeText(feedUrl).then(() => {
+                const statusDiv = document.getElementById('status');
+                statusDiv.innerHTML = '<div class="success">✓ Feed URL copied to clipboard!</div>';
+                setTimeout(() => {
+                    statusDiv.innerHTML = '';
+                }, 3000);
+            }).catch(err => {
+                alert('Failed to copy URL: ' + err);
+            });
+        }
+
+        // Auto-test on page load
+        window.addEventListener('load', () => {
+            setTimeout(testFeed, 500);
+        });
+    </script>
+</body>
+</html>
